@@ -4,11 +4,13 @@ import jwt from 'jsonwebtoken'
 const userSchema = new mongoose.Schema({
   name: { 
         type: String, 
-        required: true 
+        required: true ,
+        minlength:[4,"Name must be atleast 4 characters long"]
     },
   username: { type: String,
         required: true, 
-        unique: true 
+        unique: true ,
+        minlength:[4,"username must be atleast 4 characters long"]
     },
   profilePicture: {
         type: String, 
@@ -22,7 +24,8 @@ const userSchema = new mongoose.Schema({
     },
   password: {
         type: String,
-        required: true
+        required: true,
+        minlength:[8,"Name must be atleast 8 characters long"]
     },
   savedContents: [
         {

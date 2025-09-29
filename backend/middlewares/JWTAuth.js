@@ -1,5 +1,5 @@
 import { User } from "../models/user.model.js";
-
+import jwt from "jsonwebtoken"
 export const verifyUserJWT = async (req,res,next) =>{
     try {
         const token = req.cookie?.accessToken;
@@ -10,7 +10,7 @@ export const verifyUserJWT = async (req,res,next) =>{
         }
 
         // Decoding Token
-        const decodedToken = JsonWebTokenError.verify(token,process.env.ACCESS_SECRET_KEY);
+        const decodedToken = jwt.verify(token,process.env.ACCESS_SECRET_KEY);
 
         const user = await User.findById(decodedToken?._id).select("-password")
 

@@ -16,10 +16,8 @@ const generateToken = async (id) => {
 // Register a new rapper
 export const registerUser = async (req,res) =>{
     try{
-        // Destructure
-        console.log(req.body);
-        
-        const {name, username, email, password} = req.body;
+        // Destructure       
+       const {name, username, email, password} = req.body;
 
         // check existing user
         const existingUser = await User.findOne({
