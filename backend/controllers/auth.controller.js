@@ -67,7 +67,7 @@ export const registerUser = async (req,res) =>{
 export const loginUser = async (req,res) => {
     try {
         
-   
+   // Destructure Request
     const {credential,password} = req.body;
     
     // Check if user exist
@@ -90,9 +90,12 @@ export const loginUser = async (req,res) => {
         })
     }
 
+    // Generate Token
     const accessToken = generateToken(user._id);
+
     const userWithoutPassword = await User.findById(user._id).select("-password");
 
+    // Store token in cookie
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production"
