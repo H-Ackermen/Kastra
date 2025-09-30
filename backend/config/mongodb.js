@@ -6,7 +6,7 @@ const connectDB = async ()=>{
             console.log("Database Connected");
             
         })
-        await mongoose.connect(`${process.env.MONGODB_URI}/BVB`)
+        await mongoose.connect(`${process.env.MONGODB_URI}/Kastra`)
     }
     catch(error){
         console.log("Database Not Connected",error);
