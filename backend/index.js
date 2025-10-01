@@ -4,7 +4,7 @@ import 'dotenv/config'
 import cookieParser from 'cookie-parser'
 import connectDB from './config/mongodb.js'
 import { connectCloudinary } from './config/connectCloudinary.js'
-
+import multer from 'multer'
 
 // app config
 const app = express()
