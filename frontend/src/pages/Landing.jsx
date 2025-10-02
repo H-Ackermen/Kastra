@@ -1,7 +1,7 @@
 import React from 'react';
 import { Camera, Palette, BookOpen, Sparkles, Users, Heart, Grid3x3 } from 'lucide-react';
 import { Link } from 'react-router';
-import Navbar from "../components/Navbar"
+import Navbar from '@/components/Navbar';
 
 
 export default function KastraLanding() {

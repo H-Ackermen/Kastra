@@ -1,5 +1,6 @@
 import React from 'react'
 import KastraLanding from './pages/landing'
+import Dashboard from './pages/Dashboard'
 import Login from './pages/login'
 import { createBrowserRouter,RouterProvider } from 'react-router'
 import Signup from './pages/Signup'
@@ -17,6 +18,10 @@ function App() {
       path: '/signup',
       element: <Signup />,
     },
+    {
+      path: '/dashboard',
+      element:<Dashboard/>
+    }
   ])
 
   return (
