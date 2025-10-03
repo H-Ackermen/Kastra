@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from 'axios'
 import { errorContext } from "./ErrorContext";
+
 export const authContext = createContext();
 
 axios.defaults.withCredentials = true; 
@@ -15,7 +16,6 @@ const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(()=>localStorage.getItem('token'));
   const {handleApiError,clearErrors} = useContext(errorContext)
-
   const API_URL = import.meta.env.VITE_BACKEND_URL;
 
   // set Token
