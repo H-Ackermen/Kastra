@@ -10,9 +10,44 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import  {Link}  from "react-router";
+import { useContext, useState } from "react";
+import  {Link, useNavigate}  from "react-router";
+import { authContext } from "../context/AuthContext";
+import { Alert, AlertDescription } from "@/components/ui/alert.jsx"
+import { AlertCircle } from "lucide-react"
+import { errorContext } from "../context/ErrorContext";
 
 export default function Login() {
+  const navigate = useNavigate()
+  const {login} = useContext(authContext)
+  const {error,validationErrors} = useContext(errorContext)
+  const [formData,setFormData] = useState({credential:'',password:''})
+
+  const handleSubmit = async (e)=>{
+    e.preventDefault()
+    try {
+      const user = await login(formData)
+      if(user) navigate('/dashboard')
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const handleChange = (e) =>{
+    setFormData({...formData,[e.target.name]:e.target.value})
+  }
+
+  const renderFieldError = (field) => {
+    if(validationErrors[field]){
+          console.log(validationErrors[field]);
+      return (<p className="text-sm text-red-500 mt-1">
+          {validationErrors[field]}
+        </p>)
+        
+    }
+    return null;
+  }
+
   return (
     <div className="min-h-screen flex w-full justify-center items-center bg-slate-900">
       <Card className="w-full max-w-sm bg-[#a855f7] text-[#1a293b]">
@@ -28,14 +63,25 @@ export default function Login() {
         <CardContent>
           <form>
             <div className="flex flex-col gap-6">
+               {error && (
+            <Alert variant="destructive" className="mb-4 border-0" >
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Username / Email</Label>
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
+                  id='credential'
+                  type='text'
+                  placeholder="username / email"
                   required
+                  name='credential'
+                  value = {formData.credential}
+                  onChange={handleChange}
                 />
+                {renderFieldError('credential')}
+
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
@@ -47,13 +93,14 @@ export default function Login() {
                     Forgot your password?
                   </a>
                 </div>
-                <Input className="placeholder:text-red-500" id="password" type="password" required />
+                <Input className="placeholder:text-red-500" id="password" type="password" name='password' value={formData.password} required onChange={handleChange}/>
+                {renderFieldError('password')}
               </div>
             </div>
           </form>
         </CardContent>
         <CardFooter className="flex-col gap-2">
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" onClick={handleSubmit}>
             Login
           </Button>
           <Button variant="outline" className="w-full">
