@@ -3,6 +3,7 @@ import KastraLanding from './pages/KastraLanding'
 import Dashboard from './pages/Dashboard'
 import Login from './pages/login'
 import Signup from './pages/Signup'
+import ContenPage from './pages/ContenPage'
 import { createBrowserRouter,RouterProvider } from 'react-router'
 
 function App() {

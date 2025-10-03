@@ -122,7 +122,7 @@ export const loginUser = async (req, res) => {
     // Store token in cookie
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure:false,
     });
 
     return res.status(200).json({
@@ -159,6 +159,8 @@ export const logoutUser = async (req, res) => {
 };
 
 export const currentUser = (req, res) => {
+  console.log(req);
+  
   return res.status(200).json({
     success: true,
     user: req.user,
