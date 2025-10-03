@@ -1,10 +1,10 @@
 import React from 'react'
-import KastraLanding from './pages/landing'
+import KastraLanding from './pages/KastraLanding'
 import Dashboard from './pages/Dashboard'
 import Login from './pages/login'
-import { createBrowserRouter,RouterProvider } from 'react-router'
 import Signup from './pages/Signup'
-import ContenPage from './pages/ContenPage'
+import { createBrowserRouter,RouterProvider } from 'react-router'
+
 function App() {
   const router = createBrowserRouter([
     {

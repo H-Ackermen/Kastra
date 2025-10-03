@@ -1,18 +1,14 @@
-import React from 'react'
-
-
+import React, { useContext } from 'react'
 import { Sparkles } from 'lucide-react'
 
 
 import { Link } from 'react-router'
-
-
+import { authContext } from '../context/AuthContext'
 export default function Navbar()
 
 
 {
-
-
+  const {user,logout} = useContext(authContext)
     return (
 
 
@@ -47,14 +43,13 @@ export default function Navbar()
 
 
             <a href="#" className="text-gray-300 hover:text-white">About</a>
-
-
-            <Link to="/login" className="text-gray-300 hover:text-white">Login</Link>
-
-
+            {!user && 
+            (<Link to="/login" className="text-gray-300 hover:text-white">Login</Link>)
+}
+{!user && (
             <Link to="/signup" className="text-gray-300 hover:text-white">Sign Up</Link>
-
-
+          )  }
+          {user && <button onClick={logout} className="text-gray-300 hover:text-white">Sign Up</button>}
           </div>
 
 
