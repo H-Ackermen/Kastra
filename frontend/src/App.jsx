@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard'
 import Login from './pages/login'
 import { createBrowserRouter,RouterProvider } from 'react-router'
 import Signup from './pages/Signup'
+import ContenPage from './pages/ContenPage'
 function App() {
   const router = createBrowserRouter([
     {
@@ -21,7 +22,12 @@ function App() {
     {
       path: '/dashboard',
       element:<Dashboard/>
+    },
+    {
+      path:'/contentpage',
+      element:<ContenPage/>
     }
+
   ])
 
   return (
