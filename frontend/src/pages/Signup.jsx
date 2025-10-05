@@ -134,6 +134,7 @@ export default function Signup() {
                   required
                   name="password"
                   onChange={handleChange}
+                    autoComplete="new-password"
                   value={formData.password}
                 />
                 {renderFieldError('password')}
@@ -149,6 +150,7 @@ export default function Signup() {
                   required
                   name="confirmPassword"
                   onChange={handleChange}
+                    autoComplete="new-password"
                   value={formData.confirmPassword}
                 />
                 {renderFieldError('confirmPassword')}

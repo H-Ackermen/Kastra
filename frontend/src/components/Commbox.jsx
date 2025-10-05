@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import { Check, ChevronsUpDown } from "lucide-react"
-
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -20,31 +19,21 @@ import {
 } from "@/components/ui/popover"
 
 const frameworks = [
-  {
-    value: "nature",
-    label: "nature",
-  },
-  {
-    value: "art",
-    label: "art",
-  },
-  {
-    value: "photography",
-    label: "photography",
-  },
-  {
-    value: "tech",
-    label: "tech",
-  },
-  {
-    value: "news",
-    label: "news",
-  },
+  { value: "nature", label: "Nature" },
+  { value: "art", label: "Art" },
+  { value: "photography", label: "Photography" },
+  { value: "tech", label: "Tech" },
+  { value: "news", label: "News" },
 ]
 
-export default function ComboboxDemo() {
+export default function Commbox({ value, onChange }) {
   const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("")
+
+  const handleSelect = (currentValue) => {
+    const newValue = currentValue === value ? "" : currentValue
+    onChange(newValue) 
+    setOpen(false)
+  }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -63,18 +52,15 @@ export default function ComboboxDemo() {
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search category.." className="h-9" />
+          <CommandInput placeholder="Search category..." className="h-9" />
           <CommandList>
-            <CommandEmpty>No framework found.</CommandEmpty>
+            <CommandEmpty>No category found.</CommandEmpty>
             <CommandGroup>
               {frameworks.map((framework) => (
                 <CommandItem
                   key={framework.value}
                   value={framework.value}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue)
-                    setOpen(false)
-                  }}
+                  onSelect={handleSelect}
                 >
                   {framework.label}
                   <Check
