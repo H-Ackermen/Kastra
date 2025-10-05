@@ -1,13 +1,21 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from 'axios'
 import { errorContext } from "./ErrorContext";
+
 export const authContext = createContext();
+
+axios.defaults.withCredentials = true; 
+
+// setting default axios 
+const savedToken = localStorage.getItem("token");
+if (savedToken) {
+  axios.defaults.headers.common["Authorization"] = `Bearer ${savedToken}`;
+}
 
 const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(()=>localStorage.getItem('token'));
   const {handleApiError,clearErrors} = useContext(errorContext)
-
   const API_URL = import.meta.env.VITE_BACKEND_URL;
 
   // set Token
@@ -15,9 +23,11 @@ const AuthContextProvider = ({ children }) => {
     if (token) {
       localStorage.setItem("token", token);
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      if(!user) getCurrentUser();
     } else {
       localStorage.removeItem("token");
       delete axios.defaults.headers.common["Authorization"];
+      setUser(null);
     }
   }, [token]);
 
@@ -27,7 +37,7 @@ const AuthContextProvider = ({ children }) => {
       clearErrors();
       const res = await axios.post(
         `${API_URL}/api/auth/register-user`,
-        userData
+        userData, {withCredentials:true}
       );
       const { user, token } = res.data;     
       setToken(token);     
@@ -44,7 +54,7 @@ const AuthContextProvider = ({ children }) => {
     try {
       clearErrors();
       console.log(userData);
-      const res = await axios.post(`${API_URL}/api/auth/login-user`, userData);
+      const res = await axios.post(`${API_URL}/api/auth/login-user`, userData, {withCredentials:true});
       const { user, token } = res.data;     
       setToken(token);     
       setUser(user);
@@ -59,10 +69,10 @@ const AuthContextProvider = ({ children }) => {
   const logout = async () => {
     try {
       clearErrors();
-      await axios.post(`${API_URL}/api/auth/logout-user`);
+      await axios.post(`${API_URL}/api/auth/logout-user`, {withCredentials:true});
       setToken(null);
       setUser(null);
-      localStorage.removeItem("token");
+      // localStorage.removeItem("token");
     } catch (error) {
       console.log(error.message);
       handleApiError(error)
@@ -74,7 +84,7 @@ const AuthContextProvider = ({ children }) => {
     try {
       clearErrors()
       if (!token) return null;
-      const res = await axios.get(`${API_URL}/api/auth/current-user`);
+      const res = await axios.get(`${API_URL}/api/auth/current-user`, {withCredentials:true});
       const { user } = res.data;
       setUser(user);
       return user;
@@ -86,10 +96,11 @@ const AuthContextProvider = ({ children }) => {
 
   // On mount, if token exists, fetch user
   useEffect(() => {
-    if (token) {
+  //  const token = localStorage.getItem("token");
+    if (token && !user) {
       getCurrentUser();
     }
-  }, []);
+  }, [token]);
 
   // When token changes (after login/register), fetch user
   useEffect(() => {

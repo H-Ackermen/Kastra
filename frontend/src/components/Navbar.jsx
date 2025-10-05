@@ -13,7 +13,25 @@ export default function Navbar() {
             <Sparkles className="w-5 h-5" />
           </div>
 
-          <span className="text-xl font-bold">Kastra</span>
+
+          <div className="flex items-center gap-6">
+
+
+            <a href="#" className="text-gray-300 hover:text-white">Explore</a>
+
+
+            <a href="#" className="text-gray-300 hover:text-white">About</a>
+            {!user && 
+            (<Link to="/login" className="text-gray-300 hover:text-white">Login</Link>)
+}
+{!user && (
+            <Link to="/signup" className="text-gray-300 hover:text-white">Sign Up</Link>
+          )  }
+          {user && <Link to='/' onClick={logout} className="text-gray-300 hover:text-white">Log out</Link>}
+          {user && <Link to="/dashboard" className="text-gray-300 hover:text-white">{user.username}</Link>}
+          </div>
+
+
         </div>
 
         <div className="flex items-center gap-6">
