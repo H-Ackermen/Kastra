@@ -8,10 +8,11 @@ const contentSchema=new mongoose.Schema
     discription:{type:String,required:true},
     contentType:{type:Enumerator,values:['video','article','image'],
     required:true},
-    //if value is article then no need of url use the content.content
     url:{type:String,required:false},
-    content:{type:String},
-    
+    likedBy:[{type:mongoose.Schema.Types.ObjectId,ref:'User'}],
+    savedBy:[{type:mongoose.Schema.Types.ObjectId,ref:'User'}]
+
    } 
 )
-export const Content=mongoose.model('Content',contentSchema);
+const Content=mongoose.model('Content',contentSchema);
+export default Content;

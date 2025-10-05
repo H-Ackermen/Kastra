@@ -1,5 +1,6 @@
 import fs from 'fs'
 import { cloudinary } from './config/connectCloudinary.js'
+
 const uploadOnCloudinary = async (filePath) => {
     try {
         if(!filePath) return null;
