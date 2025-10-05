@@ -4,7 +4,6 @@ import 'dotenv/config'
 import cookieParser from 'cookie-parser'
 import connectDB from './config/mongodb.js'
 import { connectCloudinary } from './config/connectCloudinary.js'
-import multer from 'multer'
 
 // app config
 const app = express()
@@ -30,10 +29,10 @@ app.use((req, res, next) => {
 import authRoutes from "./routes/auth.route.js"
 
 import mediaRoutes from './routes/media.routes.js'
-
+import uploadRoutes from './routes/upload.route.js'
 // api endpoints
 app.use("/api/auth", authRoutes);
-
+app.use("/api/content", uploadRoutes);
 app.use("/api/media",mediaRoutes);
 
 // Start Server
