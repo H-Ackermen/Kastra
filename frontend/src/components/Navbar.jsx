@@ -11,6 +11,9 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
             <Sparkles className="w-5 h-5" />
+           
+          </div>
+          <span className="text-xl font-bold">Kastra</span>
           </div>
 
 
@@ -34,7 +37,7 @@ export default function Navbar() {
 
         </div>
 
-        <div className="flex items-center gap-6">
+        {/* <div className="flex items-center gap-6">
           <a href="#" className="text-gray-300 hover:text-white">
             Explore
           </a>
@@ -57,8 +60,8 @@ export default function Navbar() {
               Sign Up
             </button>
           )}
-        </div>
-      </div>
+        </div> */}
+   
     </nav>
   );
 }
