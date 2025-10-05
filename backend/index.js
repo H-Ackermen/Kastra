@@ -29,9 +29,12 @@ app.use((req, res, next) => {
 // import routes
 import authRoutes from "./routes/auth.route.js"
 
+import mediaRoutes from './routes/media.routes.js'
+
 // api endpoints
 app.use("/api/auth", authRoutes);
 
+app.use("/api/media",mediaRoutes);
 
 // Start Server
 const startServer = async () => {
