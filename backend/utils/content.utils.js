@@ -1,6 +1,7 @@
 import fs from 'fs'
 import { v2 as cloudinary } from 'cloudinary';
-const uploadOnCloudinary = async (filePath) => {
+
+export const uploadOnCloudinary = async (filePath) => {
     try {
         if(!filePath) {
             console.log("File path is missing");
@@ -28,4 +29,3 @@ const uploadOnCloudinary = async (filePath) => {
         return null;
     }
 }
-export { uploadOnCloudinary }

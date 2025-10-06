@@ -12,7 +12,7 @@ const generateToken = async (id) => {
   }
 };
 
-// Register a new rapper
+// Register a new User
 export const registerUser = async (req, res) => {
   try {
     // Destructure

@@ -1,11 +1,14 @@
-import Content from "../models/content.model.js"; 
-import { uploadOnCloudinary } from "./upload.cloudinary.js";
 
+import Content from "../models/content.model.js"; 
+import { uploadOnCloudinary } from "../utils/content.utils.js";
+import { addToCategory } from "../utils/category.utils.js";
 export const uploadAndCreateContent = async (req, res) => {
     console.log("Running uploadAndCreateContents");
     
     const file = req.file;
-    const { title, description } = req.body;
+    console.log(req.body);
+    const { title, description,category } = req.body;
+    
     const owner = req.user._id;
 
     if (!file) {
@@ -53,6 +56,7 @@ export const uploadAndCreateContent = async (req, res) => {
             contentType: result.resource_type
         });
         await newContent.save();
+        await addToCategory(newContent._id,category);
         return res.status(201).json({
             success: true,
             message: "Content created successfully",

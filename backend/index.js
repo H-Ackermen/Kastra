@@ -27,6 +27,7 @@ app.use((req, res, next) => {
 
 // import routes
 import authRoutes from "./routes/auth.route.js"
+import collectionRouter from './routes/collection.route.js'
 
 import mediaRoutes from './routes/media.routes.js'
 import uploadRoutes from './routes/upload.route.js'
@@ -34,6 +35,7 @@ import uploadRoutes from './routes/upload.route.js'
 app.use("/api/auth", authRoutes);
 app.use("/api/content", uploadRoutes);
 app.use("/api/media",mediaRoutes);
+app.use("/api/collections",collectionRouter)
 
 // Start Server
 const startServer = async () => {

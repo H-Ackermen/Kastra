@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import { verifyUserJWT } from '../middlewares/JWTAuth.js';
+import { verifyUserJWT } from '../middlewares/jwt.middleware.js';
 import { upload } from '../middlewares/multer.middleware.js';
 import { uploadAndCreateContent } from '../controllers/content.controller.js';
 
