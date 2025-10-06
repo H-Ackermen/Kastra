@@ -6,4 +6,4 @@ const categorySchema = new mongoose.Schema(
         contents : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Content' }]
     }
 );
-export const Category = mongoose.model('Tag', categorySchema);
+export const Category = mongoose.model('Category', categorySchema);
