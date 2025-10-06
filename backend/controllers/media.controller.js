@@ -2,6 +2,7 @@ import Content from "../models/content.model.js";
 export const updateLikeCnt = async (req, res) => {
   try {
     const { contentId } = req.params;
+    console.log("like updation controller is running");
     if (!contentId)
     {
       console.log("content id is not present in updateLike controller ");
@@ -13,7 +14,7 @@ export const updateLikeCnt = async (req, res) => {
     }
     const content = await Content.findById(contentId);
     //check if user has already liked
-  
+    console.log("11111111111111111111111111111111111");
     if (content.likedBy.includes(userId)) {
       //it is a unlike request
       // so decrease the like count from content model
@@ -26,10 +27,10 @@ export const updateLikeCnt = async (req, res) => {
       //it is a like request
       // so create a new like document
       content.likecnt++;
-      content.push(userId)
+      content.likedBy.push(userId)
     }
-    const res = await content.save();
-    if (res)
+    const result = await content.save();
+    if (result)
     {
       console.log("like count updated successfully");
       return res.status(200).json({
@@ -51,15 +52,19 @@ export const updateLikeCnt = async (req, res) => {
 };
 export const savedContent = async (req, res) => {
   try {
-    const { title, description, userId } = req.body;
-    if (!title || !description || !userId) {
-      return res.status(400).json({
-        success: false,
-        message: "All fields are required",
-      });
+    const { userId } = req.body;
+    // if (!title || !description || !userId) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "All fields are required",
+    //   });
+    // }
+    const {contentId}=req.params
+    const content=await Content.findById(contentId);
+    if(!content)
+    {
+      console.log("content not found in savedContent controller");
     }
-    const contentid=req.params
-    const content=Content.findById(contentid);
     if(content.savedBy.includes(userId))
     {
         //unsave request user id already present hence remove it
@@ -69,8 +74,8 @@ export const savedContent = async (req, res) => {
     {
         content.savedBy.push(userId);
     }
-    const res=await content.save();
-    if(res)
+    const result=await content.save();
+    if(result)
     {
         console.log("content saved successfully");
         return res.status(200).json(
