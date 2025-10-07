@@ -25,7 +25,9 @@ const MyCollection = () => {
             post={content}
           />
         ))
+        
       )}
+    
     </div>
   );
 };

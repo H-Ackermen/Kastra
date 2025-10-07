@@ -32,6 +32,9 @@ export default function Navbar() {
           )  }
           {user && <Link to='/' onClick={logout} className="text-gray-300 hover:text-white">Log out</Link>}
           {user && <Link to="/dashboard" className="text-gray-300 hover:text-white">{user.username}</Link>}
+          <div>
+           
+          </div>
           </div>
 
 

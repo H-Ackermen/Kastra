@@ -39,10 +39,10 @@ export const updateLikeCnt = async (req, res) => {
 };
 export const savedContent = async (req, res) => {
   try {
-    console.log("")
+   
     const user = req.user;  //full user document from middleware
     const { contentId } = req.params;
-
+    const userId=user._id;
     const content = await Content.findById(contentId);
     if (!content) {
       console.log("content not found");
@@ -51,39 +51,39 @@ export const savedContent = async (req, res) => {
         message: "Content not found",
       });
     }
+    const userIdStr = user._id.toString();
+const alreadySaved = content.savedBy.some((id) => id.toString() === userIdStr);
 
- 
-    const alreadySaved = user.savedContents.some(
-      (id) => id.toString() === contentId.toString()
-    );
+    // Toggle save/unsave on content document
+    const update = alreadySaved
+      ? { $pull: { savedBy: userId } }
+      : { $addToSet: { savedBy: userId } };
 
+    const updated = await Content.findByIdAndUpdate(contentId, update, { new: true });
+
+    // Also toggle in user.savedContents for consistency
     if (alreadySaved) {
-      // Unsave it 
       user.savedContents = user.savedContents.filter(
         (id) => id.toString() !== contentId.toString()
       );
-      await user.save();
-
-      return res.status(200).json({
-        success: true,
-        message: "Content removed from saved list",
-      });
     } else {
-      // Save it (add to saved list)
       user.savedContents.push(contentId);
-      await user.save();
-
-      return res.status(200).json({
-        success: true,
-        message: "Content saved successfully",
-      });
     }
+    await user.save();
 
+    return res.status(200).json({
+      success: true,
+      data: {
+        saved: !alreadySaved,       // true if now saved, false if unsaved
+        savedBy: updated.savedBy,   // list of users who saved it
+        savedContents: user.savedContents, // optional: return updated user's saved list
+      },
+    });
   } catch (error) {
     console.error("Error in savedContent controller:", error);
     return res.status(500).json({
       success: false,
-      message: "Something went wrong while saving content",
+      message: "Update Saved Content Failed",
       error: error.message,
     });
   }

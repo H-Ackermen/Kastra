@@ -56,8 +56,7 @@ useEffect(() => {
       console.log("Like API Response:", res.status, res.data);
 
       if (res.status === 200 && res.data.success) {
-        setLikeCount(res.data.data.likecnt
-);
+        setLikeCount(res.data.data.likecnt);
         setLiked((prev) => !prev);
       } else if (res.status === 204) {
         console.warn("Got 204 - No Content from like API");
@@ -90,8 +89,11 @@ useEffect(() => {
       console.log("Save API Response:", res.status, res.data);
 
       if (res.status === 200 && res.data.success) {
+        console.log(res.data);
         setSaved((prev) => !prev);
       } else if (res.status === 204) {
+        console.log(res.data);
+        setSaved((prev) => !prev);
         console.warn("Got 204 - No Content from save API");
       }
     } catch (err) {
@@ -104,12 +106,12 @@ useEffect(() => {
   // --------------------------
   return (
     <div
-      className="relative w-80 rounded-lg shadow-md overflow-hidden bg-[#3b82f6] hover:scale-[1.02] transition-transform"
+      className="relative w-80 rounded-lg shadow-md overflow-hidden  hover:scale-[1.02] transition-transform"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       <Link to={`/contentpage/${post._id}`}>
-        <div className="h-40 overflow-hidden">
+        <div className="h-50 overflow-hidden">
           {isVideo ? (
             <video
               ref={videoRef}
@@ -130,7 +132,7 @@ useEffect(() => {
       </Link>
 
       {/* Content Info */}
-      <div className="p-4">
+      <div className="p-4 bg-gradient-to-r from-blue-500 to-violet-500 opacity-90">
         <h2 className="text-lg font-semibold mb-2 truncate">
           {post.title || "Untitled"}
         </h2>
@@ -155,7 +157,7 @@ useEffect(() => {
           {/* Save Button */}
           <div className="cursor-pointer" onClick={handleSave}>
             {saved ? (
-              <BookmarkCheck className="text-yellow-400" />
+              <BookmarkCheck className="text-yellow-300" />
             ) : (
               <Bookmark className="text-white" />
             )}
