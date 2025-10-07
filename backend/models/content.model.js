@@ -8,8 +8,8 @@ const contentSchema=new mongoose.Schema
     description:{type:String,required:true},
     contentType:{type:String,enum:['video','article','image']},
     url:{type:String,required:false},
-    likedBy:[{type:mongoose.Schema.Types.ObjectId,ref:'User'}],
-    savedBy:[{type:mongoose.Schema.Types.ObjectId,ref:'User'}]
+    likedBy:[{type:mongoose.Schema.Types.ObjectId,ref:'User',default:[]}],
+    savedBy:[{type:mongoose.Schema.Types.ObjectId,ref:'User',default:[]}]
 
    } 
 )
