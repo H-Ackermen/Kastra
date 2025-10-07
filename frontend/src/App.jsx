@@ -38,10 +38,7 @@ function App() {
       path:'/collections/:collectionId',
        element:<CollectionPage />
     }
-
-
   ])
-
   return (
     <>
       <RouterProvider router={router} />

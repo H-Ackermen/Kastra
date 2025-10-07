@@ -1,103 +1,89 @@
 import Content from "../models/content.model.js";
+
 export const updateLikeCnt = async (req, res) => {
   try {
     const { contentId } = req.params;
-    console.log("like updation controller is running");
-    if (!contentId)
-    {
-      console.log("content id is not present in updateLike controller ");
-    }
-    const { userId } = req.body;
-    if (!userId)
-    {
-      console.log("user id is not coming in updatelike controller");
-    }
-    const content = await Content.findById(contentId);
-    //check if user has already liked
-    console.log("11111111111111111111111111111111111");
-    if (content.likedBy.includes(userId)) {
-      //it is a unlike request
-      // so decrease the like count from content model
+    const userId = req.user?._id;
+    if (!userId) return res.status(401).json({ success: false, message: "Unauthorized" });
 
-      content.likedBy = content.likedBy.filter(
-        (id) => id.toString() !== userId.toString()
-      );
-      content.likecnt--;
-    } else {
-      //it is a like request
-      // so create a new like document
-      content.likecnt++;
-      content.likedBy.push(userId)
+    const content = await Content.findById(contentId).select("likedBy likecnt");
+    if (!content) return res.status(404).json({ success: false, message: "Content not found" });
+
+    const userIdStr = userId.toString();
+    const alreadyLiked = content.likedBy.some((id) => id.toString() === userIdStr);
+
+    const update = alreadyLiked
+      ? { $pull: { likedBy: userId }, $inc: { likecnt: -1 } }
+      : { $addToSet: { likedBy: userId }, $inc: { likecnt: 1 } };
+
+    const updated = await Content.findByIdAndUpdate(contentId, update, { new: true });
+
+    // ensure likecnt never negative
+    if (updated.likecnt < 0) {
+      updated.likecnt = 0;
+      await updated.save();
     }
-    const result = await content.save();
-    if (result)
-    {
-      console.log("like count updated successfully");
-      return res.status(200).json({
-        success: true,
-      });
-    } else {
-      console.log(
-        "like not updated in content model in database in updatelike controller"
-      );
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      success: false,
-      message: "Update Like Count Failed",
-      error: error.message,
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        likecnt: updated.likecnt,
+        liked: !alreadyLiked,
+        likedBy: updated.likedBy,
+      },
     });
+  } catch (error) {
+    console.error("Error in updateLikeCnt:", error);
+    return res.status(500).json({ success: false, message: "Update Like Count Failed", error: error.message });
   }
 };
 export const savedContent = async (req, res) => {
   try {
-    const { userId } = req.user._id;
-    // if (!title || !description || !userId) {
-    //   return res.status(400).json({
-    //     success: false,
-    //     message: "All fields are required",
-    //   });
-    // }
-    console.log(req.user);
-    const {contentId}=req.params
-    const content=await Content.findById(contentId);
-    if(!content)
-    {
-      console.log("content not found in savedContent controller");
+    console.log("")
+    const user = req.user;  //full user document from middleware
+    const { contentId } = req.params;
+
+    const content = await Content.findById(contentId);
+    if (!content) {
+      console.log("content not found");
+      return res.status(404).json({
+        success: false,
+        message: "Content not found",
+      });
     }
-    if(content.savedBy.includes(userId))
-    {
-        //unsave request user id already present hence remove it
-       content.savedBy = content.savedBy.filter(
-  (id) => id && id.toString() !== userId.toString()
-);
+
+ 
+    const alreadySaved = user.savedContents.some(
+      (id) => id.toString() === contentId.toString()
+    );
+
+    if (alreadySaved) {
+      // Unsave it 
+      user.savedContents = user.savedContents.filter(
+        (id) => id.toString() !== contentId.toString()
+      );
+      await user.save();
+
+      return res.status(200).json({
+        success: true,
+        message: "Content removed from saved list",
+      });
+    } else {
+      // Save it (add to saved list)
+      user.savedContents.push(contentId);
+      await user.save();
+
+      return res.status(200).json({
+        success: true,
+        message: "Content saved successfully",
+      });
     }
-    else
-    {
-        content.savedBy.push(userId);
-    }
-    const result=await content.save();
-    if(result)
-    {
-        console.log("content saved successfully");
-        return res.status(200).json(
-            {
-                success:true,
-                message:"Content saved successfully"
-            }
-        )
-    }
-    else
-    {
-        console.log("content not saved in database");
-    }
-   
+
   } catch (error) {
-    console.log(error);
+    console.error("Error in savedContent controller:", error);
     return res.status(500).json({
       success: false,
-      message: "Content saving failed",
+      message: "Something went wrong while saving content",
       error: error.message,
     });
   }

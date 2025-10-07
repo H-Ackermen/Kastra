@@ -4,6 +4,6 @@ import { verifyUserJWT } from '../middlewares/jwt.middleware.js';
 const mediaroutes=Router();
 
 
-mediaroutes.route('/update/:contentId/like').post(verifyUserJWT,updateLikeCnt);
-mediaroutes.route('/update/:contentId/saved').post(verifyUserJWT,savedContent);
+mediaroutes.route('/update/:contentId/like').put(verifyUserJWT,updateLikeCnt);
+mediaroutes.route('/update/:contentId/saved').put(verifyUserJWT,savedContent);
 export default mediaroutes;
