@@ -9,7 +9,7 @@ const ContentCard = ({ post }) => {
       <Link to={`/contentpage/${post._id}`}>
         <div className="h-40 overflow-hidden">
           <img
-            src={post.url || "/placeholder.jpg"} // fallback if no image
+            src={post.url || "/placeholder.jpg"} 
             alt={post.title}
             className="w-full h-full object-cover"
           />
