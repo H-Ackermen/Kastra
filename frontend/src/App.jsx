@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard'
 import Login from './pages/login'
 import Signup from './pages/Signup'
 import ContenPage from './pages/ContenPage'
+import CollectionPage from './pages/CollectionPage'
 import { createBrowserRouter,RouterProvider } from 'react-router'
 
 function App() {
@@ -27,6 +28,10 @@ function App() {
     {
       path:'/contentpage',
       element:<ContenPage/>
+    },
+    {
+      path:'/collections/:collectionId',
+       element:<CollectionPage />
     }
 
   ])

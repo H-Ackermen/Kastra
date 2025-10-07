@@ -3,7 +3,7 @@ import myImage from "../assets/mobile-reso.jpg";
 import { Link } from "react-router";
 import { Heart, BookMarked } from "lucide-react";
 
-const ContentCard = () => {
+const ContentCard = ({content}) => {
   return (
     <div className="relative w-80 rounded-lg shadow-md overflow-hidden bg-[#3b82f6]">
      
