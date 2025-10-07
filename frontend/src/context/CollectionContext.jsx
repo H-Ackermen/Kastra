@@ -37,7 +37,7 @@ const CollectionContextProvider = ({ children }) => {
       );
       if (res.data.success) {
         // update collection which is changed
-        fetchCollectionByUser()
+        fetchContentofCollection(collectionId)
       }
     } catch (error) {
       console.log("Error: ", error.message);
@@ -52,7 +52,7 @@ const CollectionContextProvider = ({ children }) => {
         { data: formData, withCredentials: true }
       );
       if (res.data.success) {
-        fetchCollectionByUser()
+        fetchContentofCollection(collectionId)
       }
     } catch (error) {
       console.log("Error ", error.message);
