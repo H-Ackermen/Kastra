@@ -24,7 +24,10 @@ export const searchData = async (req, res) => {
             searchResult=await Content.find({title:{$regex:title,$options:"im"}});
         }
        
-    res.status(200).json(searchResult);
+    res.status(200).json({
+      success:true,
+      message:"Contents Searched Succefully",
+      contents:searchResult});
   } catch (error) {
     console.error("Search error:", error);
     res.status(500).json({ message: "Internal Server Error" });

@@ -29,13 +29,13 @@ app.use((req, res, next) => {
 import authRoutes from "./routes/auth.route.js"
 import collectionRouter from './routes/collection.route.js'
 import mediaRoutes from './routes/media.routes.js'
-import uploadRoutes from './routes/upload.route.js'
 import searchRoutes from './routes/search.routes.js'
+import contentRoutes from './routes/content.route.js'
 
 
 // api endpoints
 app.use("/api/auth", authRoutes);
-app.use("/api/content", uploadRoutes);
+app.use("/api/content", contentRoutes);
 app.use("/api/media",mediaRoutes);
 app.use("/api/collections",collectionRouter)
 app.use("/api/search",searchRoutes);

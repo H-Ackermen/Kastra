@@ -1,25 +1,38 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Link } from "react-router";
 import { Heart, BookmarkCheck, Bookmark } from "lucide-react";
 
 const ContentCard = ({ post, currentUserId }) => {
   const API_URL = import.meta.env.VITE_BACKEND_URL;
+  const videoRef = useRef(null);
 
-  // Initialize like and save state safely
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);
   const [likeCount, setLikeCount] = useState(post.likecnt || 0);
 
-  // Setup from post data when component mounts
+  const isVideo = post.contentType === "video";
+
+  // Initialize like/save state
   useEffect(() => {
     if (post?.likedBy?.includes(currentUserId)) setLiked(true);
     if (post?.savedBy?.includes(currentUserId)) setSaved(true);
   }, [post, currentUserId]);
 
-  // ============================
-  //  LIKE HANDLER
-  // ============================
+  // --------------------------
+  //   VIDEO HOVER HANDLERS
+  // --------------------------
+  const handleMouseEnter = () => {
+    if (isVideo && videoRef.current) videoRef.current.play();
+  };
+
+  const handleMouseLeave = () => {
+    if (isVideo && videoRef.current) videoRef.current.pause();
+  };
+
+  // --------------------------
+  //   LIKE HANDLER
+  // --------------------------
   const handleLike = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -40,7 +53,6 @@ const ContentCard = ({ post, currentUserId }) => {
 
       console.log("Like API Response:", res.status, res.data);
 
-      // Handle 200 OK response
       if (res.status === 200 && res.data.success) {
         setLikeCount(res.data.data.likecnt);
         setLiked(res.data.data.liked);
@@ -52,9 +64,9 @@ const ContentCard = ({ post, currentUserId }) => {
     }
   };
 
-  // ============================
-  //  SAVE HANDLER
-  // ============================
+  // --------------------------
+  //   SAVE HANDLER
+  // --------------------------
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -85,19 +97,33 @@ const ContentCard = ({ post, currentUserId }) => {
     }
   };
 
-  // ============================
-  //  RENDER COMPONENT
-  // ============================
+  // --------------------------
+  //   RENDER COMPONENT
+  // --------------------------
   return (
-    <div className="relative w-80 rounded-lg shadow-md overflow-hidden bg-[#3b82f6] hover:scale-[1.02] transition-transform">
-      {/* Image Section */}
+    <div
+      className="relative w-80 rounded-lg shadow-md overflow-hidden bg-[#3b82f6] hover:scale-[1.02] transition-transform"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <Link to={`/contentpage/${post._id}`}>
         <div className="h-40 overflow-hidden">
-          <img
-            src={post.url || "/placeholder.jpg"}
-            alt={post.title}
-            className="w-full h-full object-cover hover:scale-110 transition-transform"
-          />
+          {isVideo ? (
+            <video
+              ref={videoRef}
+              src={post.url}
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <img
+              src={post.url || "/placeholder.jpg"}
+              alt={post.title}
+              className="w-full h-full object-cover hover:scale-110 transition-transform"
+            />
+          )}
         </div>
       </Link>
 
