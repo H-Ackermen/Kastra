@@ -70,3 +70,70 @@ export const uploadAndCreateContent = async (req, res) => {
         });
     }
 };
+// fetch all contents by a user
+
+export const fetchContentsByUser = async (req, res) => {
+    const userId = req.user._id;
+
+    try {
+        const contents = await Content.find({ owner: userId }).populate('owner', 'name email');
+        return res.status(200).json({
+            success: true,
+            message: "Contents fetched successfully",
+            contents
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            success: false,
+            message: "Error occurred while fetching contents",
+        });
+    }
+};
+// fetch all contents by id
+export const fetchContentById = async (req, res) => {
+    const { id } = req.params;
+    console.log(req.params);
+    
+    console.log(id);
+    
+    try {
+        const content = await Content.findById(id).populate('owner', 'name email');
+        if (!content) {
+            return res.status(404).json({
+                success: false,
+                message: "Content not found",
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            message: "Content fetched successfully",
+            content
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            success: false,
+            message: "Error occurred while fetching content",
+        });
+    }
+};
+// fetch all contents
+export const fetchAllContents = async(req , res)=>{
+    try{
+        const contents = await Content.find({}).populate('owner' , 'name email');
+        return res.status(200).json({
+            success:true,
+            message:"All contents fetched acche se",
+            contents
+        })
+    }
+    catch(error){
+        console.log(error);
+        return res.status(500).json({
+            success : false,
+            message : "Error in fetching all contents",
+            error : error.message
+        })
+    }
+};
