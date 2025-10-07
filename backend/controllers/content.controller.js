@@ -76,7 +76,7 @@ export const fetchContentsByUser = async (req, res) => {
     const userId = req.user._id;
 
     try {
-        const contents = await Content.find({ owner: userId }).populate('owner', 'name email');
+        const contents = await Content.find({ owner: userId }).populate('owner', 'name email username');
         return res.status(200).json({
             success: true,
             message: "Contents fetched successfully",
@@ -98,7 +98,7 @@ export const fetchContentById = async (req, res) => {
     console.log(id);
     
     try {
-        const content = await Content.findById(id).populate('owner', 'name email');
+        const content = await Content.findById(id).populate('owner', 'name email username');
         if (!content) {
             return res.status(404).json({
                 success: false,
@@ -121,7 +121,7 @@ export const fetchContentById = async (req, res) => {
 // fetch all contents
 export const fetchAllContents = async(req , res)=>{
     try{
-        const contents = await Content.find({}).populate('owner' , 'name email');
+        const contents = await Content.find({}).populate('owner' , 'name email username');
         return res.status(200).json({
             success:true,
             message:"All contents fetched acche se",

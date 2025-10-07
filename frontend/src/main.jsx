@@ -12,7 +12,7 @@ createRoot(document.getElementById("root")).render(
     <ErrorContextProvider>
       <AuthContextProvider>
         <ContentContextProvider>
-          <CollectionContextProvider>
+          <CollectionContextProvider>        
             <App />
           </CollectionContextProvider>
         </ContentContextProvider>

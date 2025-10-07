@@ -60,8 +60,8 @@ const [content, setContent] = useState(null);
         setContents(res.data.contents)
       }
     } catch (error) {
-      console.error("Error fetching content:", err);
-      handleApiError(err);
+      console.error("Error fetching content:", error);
+      handleApiError(error);
     }
   }
 
@@ -73,8 +73,8 @@ const [content, setContent] = useState(null);
         setContents(res.data.contents)
       }
     } catch (error) {
-      console.error("Error fetching content:", err);
-      handleApiError(err);
+      console.error("Error fetching content:", error);
+      handleApiError(error);
     }
   }
 
@@ -86,8 +86,8 @@ const [content, setContent] = useState(null);
         setContent(res.data.content)
       }
     } catch (error) {
-      console.error("Error fetching content:", err);
-      handleApiError(err);
+      console.error("Error fetching content:", error);
+      handleApiError(error);
     }
   }
 
