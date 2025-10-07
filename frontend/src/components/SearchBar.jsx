@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Search } from "lucide-react";
 
-const SearchBar = ({ onSearch }) => {
+const SearchBar = ({ onSearch, isFiltered,handleReset }) => {
   const [searchVal, setSearchVal] = useState("");
   const [filterType, setFilterType] = useState("title");
 
@@ -25,9 +25,17 @@ const SearchBar = ({ onSearch }) => {
           onChange={(e) => setSearchVal(e.target.value)}
           className="w-80 h-10 text-amber-400 bg-[#7c3aed] p-2 rounded-md outline-none"
         />
-        <button type="submit" className="ml-2">
+        <button type="submit" className="ml-2 cursor-pointer">
           <Search />
         </button>
+        {isFiltered && (
+          <button
+            onClick={handleReset}
+            className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 transition-all m-2"
+          >
+            Reset
+          </button>
+        )}
       </div>
 
       <div>

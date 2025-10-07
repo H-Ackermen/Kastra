@@ -10,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { ContentContext } from "../context/ContentContext";
+import { contentContext } from "../context/ContentContext";
 import Commbox from "./Commbox";
 
 const UploadContent = () => {
@@ -19,7 +19,7 @@ const UploadContent = () => {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [file, setFile] = useState(null);
-  const { uploadContent } = useContext(ContentContext);
+  const { uploadContent } = useContext(contentContext);
 
   const handleCategoryChange = (selectedValue) => {
     setCategory(selectedValue);

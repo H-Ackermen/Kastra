@@ -1,18 +1,42 @@
-import React from "react";
+import React,{useRef} from "react";
 import { Link } from "react-router";
 import { Heart, BookMarked } from "lucide-react";
 
 const ContentCard = ({ post }) => {
+    const videoRef = useRef(null);
+
+  const handleMouseEnter = () => {
+    if (videoRef.current) videoRef.current.play();
+  };
+
+  const handleMouseLeave = () => {
+    if (videoRef.current) videoRef.current.pause();
+  };
+
+  const isVideo = post.contentType === "video"
   return (
-    <div className="relative w-80 rounded-lg shadow-md overflow-hidden bg-[#3b82f6]">
+    <div className="relative w-80 rounded-lg shadow-md overflow-hidden bg-[#3b82f6]" onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}>
       {/* Image section */}
       <Link to={`/contentpage/${post._id}`}>
         <div className="h-40 overflow-hidden">
+           {isVideo ? (
+          <video
+            ref={videoRef}
+            src={post.url}
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover"
+          />
+        ) : (
           <img
             src={post.url || "/placeholder.jpg"} 
             alt={post.title}
             className="w-full h-full object-cover"
           />
+        )}
+          
         </div>
       </Link>
 

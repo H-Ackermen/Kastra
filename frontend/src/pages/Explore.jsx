@@ -1,37 +1,38 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
 import SearchBar from "../components/SearchBar";
 import ContentCard from "../components/ContentCard";
-import Navbar from "../components/Navbar"
+import Navbar from "../components/Navbar";
+import { contentContext } from "../context/ContentContext";
+
 const ExplorePage = () => {
-  const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const { searchContent, contents, fetchAllContent } = useContext(contentContext);
+  const [isFiltered, setIsFiltered] = useState(false); // track if user searched
 
   const handleSearch = async (queryType, queryValue) => {
-    try {
-      setLoading(true);
-      const response = await axios.get("http://localhost:3000/api/search", {
-        params: { [queryType]: queryValue },
-      });
-      console.log(response.data);
-      setResults(response.data);
-    } catch (err) {
-      console.error("Error searching:", err);
-    } finally {
-      setLoading(false);
-    }
+    await searchContent(queryType, queryValue);
+    setIsFiltered(true);
   };
+
+  const handleReset = async () => {
+    await fetchAllContent();
+    setIsFiltered(false);
+  };
+
+  useEffect(() => {
+    fetchAllContent();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-950 text-white">
-        <Navbar/>
-      <SearchBar onSearch={handleSearch} />
+      <Navbar />
+      <div className="flex justify-center items-center gap-4 mt-4">
+        <SearchBar onSearch={handleSearch} isFiltered={isFiltered} handleReset={handleReset}/>
+        
+      </div>
 
       <div className="flex flex-wrap justify-center gap-6 mt-8">
-        {loading ? (
-          <p>Loading...</p>
-        ) : results.length > 0 ? (
-          results.map((content) => (
+        {contents.length > 0 ? (
+          contents.map((content) => (
             <ContentCard key={content._id} post={content} />
           ))
         ) : (
