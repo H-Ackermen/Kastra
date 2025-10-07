@@ -4,7 +4,7 @@ import { contentContext } from "../context/ContentContext";
 import ContentCard from "./ContentCard";
 
 const MyCollection = () => {
-  const { contents, fetchContentByUser } = useContext(contentContext);
+  const { contents, fetchContentByUser, deleteContent } = useContext(contentContext);
 
    useEffect(() => {
     const fetchData = async () => {
@@ -13,17 +13,27 @@ const MyCollection = () => {
     fetchData();
   }, []);
 
-
+    const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this content?");
+    if (confirmDelete) {
+      await deleteContent(id);
+    }
+  };
   return (
     <div className="flex flex-wrap gap-4 p-4 items-center justify-center">
       {contents.length === 0 ? (
         <p>No contents yet!</p>
       ) : (
         contents.map((content) => (
-          <ContentCard
-            key={content._id}
-            post={content}
-          />
+         <div key={content._id} className="relative">
+            <ContentCard post={content} />
+            <button
+              onClick={() => handleDelete(content._id)}
+              className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm"
+            >
+              Delete
+            </button>
+          </div>
         ))
         
       )}

@@ -31,7 +31,7 @@ import collectionRouter from './routes/collection.route.js'
 import mediaRoutes from './routes/media.routes.js'
 import searchRoutes from './routes/search.routes.js'
 import contentRoutes from './routes/content.route.js'
-
+import commentRoutes from './routes/comment.routes.js'
 
 // api endpoints
 app.use("/api/auth", authRoutes);
@@ -39,7 +39,7 @@ app.use("/api/content", contentRoutes);
 app.use("/api/media",mediaRoutes);
 app.use("/api/collections",collectionRouter)
 app.use("/api/search",searchRoutes);
-
+app.use("/api/comments" , commentRoutes);
 // Start Server
 const startServer = async () => {
   try {

@@ -20,7 +20,7 @@ const CollectionContextProvider = ({ children }) => {
       console.log(res);
       if (res.data.success) {
         // add new collection to existings collections
-        fetchCollectionByUser()
+        await fetchCollectionByUser()
       }
     } catch (error) {
       console.log("Error: ", error.message);
@@ -37,7 +37,7 @@ const CollectionContextProvider = ({ children }) => {
       );
       if (res.data.success) {
         // update collection which is changed
-        fetchContentofCollection(collectionId)
+        await fetchContentofCollection(collectionId)
       }
     } catch (error) {
       console.log("Error: ", error.message);
@@ -52,7 +52,7 @@ const CollectionContextProvider = ({ children }) => {
         { data: formData, withCredentials: true }
       );
       if (res.data.success) {
-        fetchContentofCollection(collectionId)
+        await fetchContentofCollection(collectionId)
       }
     } catch (error) {
       console.log("Error ", error.message);
@@ -68,7 +68,7 @@ const CollectionContextProvider = ({ children }) => {
       console.log(res.data);
       
       if (res.data.success) {
-          fetchCollectionByUser()
+          await fetchCollectionByUser()
       }
     } catch (error) {
       console.log("Error ", error.message);
