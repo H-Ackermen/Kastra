@@ -1,4 +1,4 @@
-import { User } from "../models/user.model.js";
+import  User  from "../models/user.model.js";
 import jwt from "jsonwebtoken"
 export const verifyUserJWT = async (req,res,next) =>{
     try {
@@ -24,6 +24,7 @@ export const verifyUserJWT = async (req,res,next) =>{
             req.user = user;
             next();
     } catch (error) {
+        console.log("error in verifyuser jwt middleware");
         return res.status(401).json({success:false, message:error.message})
     }
 }

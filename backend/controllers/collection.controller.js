@@ -1,4 +1,4 @@
-import { Collection } from "../models/collection.model.js";
+import  Collection  from "../models/collection.model.js";
 
 // Create a new Collection
 export const createCollection = async (req,res) => {

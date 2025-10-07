@@ -27,6 +27,7 @@ import NavigationMenu from "../components/NavigationMenu";
 import MyContent from "../components/MyContent";
 import MyCollection from "../components/MyCollection";
 import MySaved from "../components/MySaved";
+import SearchBar from "../components/SearchBar";
 
 export default function KastraDashboard() {
   const [activebtn, setActivebtn] = useState("mycontent");
@@ -39,10 +40,9 @@ export default function KastraDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white">
+    <div className="min-h-screen bg-slate-900 text-white  ">
       {/* Top Navigation */}
       <Navbar />
-
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 mt-8">
         {stats.map((stat, i) => (

@@ -30,15 +30,11 @@ const userSchema = new mongoose.Schema({
   savedContents: [
         {
             type: mongoose.Schema.Types.ObjectId, 
-            ref: "Content" 
+            ref: "Content",
+            default:[]
         }
     ],
-  collections: [
-        { 
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Collection"
-        }
-    ],
+  
 });
 
 // hash password before saving user
@@ -60,5 +56,5 @@ userSchema.methods.generateAccessToken = async function() {
     expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
   })
 }
-
-export const User = mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchema);
+export default User;

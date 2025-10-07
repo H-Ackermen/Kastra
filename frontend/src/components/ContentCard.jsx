@@ -1,17 +1,16 @@
 import React from "react";
-import myImage from "../assets/mobile-reso.jpg";
 import { Link } from "react-router";
 import { Heart, BookMarked } from "lucide-react";
 
-const ContentCard = () => {
+const ContentCard = ({ post }) => {
   return (
     <div className="relative w-80 rounded-lg shadow-md overflow-hidden bg-[#3b82f6]">
-     
-      <Link to="/contentpage">
+      {/* Image section */}
+      <Link to={`/contentpage/${post._id}`}>
         <div className="h-40 overflow-hidden">
           <img
-            src={myImage}
-            alt="Image"
+            src={post.url || "/placeholder.jpg"} // fallback if no image
+            alt={post.title}
             className="w-full h-full object-cover"
           />
         </div>
@@ -19,21 +18,20 @@ const ContentCard = () => {
 
       {/* Content info */}
       <div className="p-4">
-        <h2 className="text-lg font-semibold mb-2">content Title</h2>
-        <p >
-          decription about the content
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Architecto modi nisi delectus sunt consequatur quo sint ipsam itaque dolore ea rem ad voluptas laborum voluptatibus, sapiente 
+        <h2 className="text-lg font-semibold mb-2 truncate">
+          {post.title || "Untitled"}
+        </h2>
+        <p className="text-sm text-gray-200 line-clamp-3">
+          {post.description || "No description available."}
         </p>
+
         <div className="flex justify-between mt-4">
-          <button>
-            <div className="flex items-center">
-              <Heart className="w-5 h-5 text-red-500" />
-              <span className="ml-2">123</span>
-            </div>
-          </button>
-          <button >
-            <BookMarked  />
-          </button>
+          <div className="flex items-center">
+            <Heart className="w-5 h-5 text-red-500" />
+            <span className="ml-2">{post.likecnt || 0}</span>
+          </div>
+
+          <BookMarked className="cursor-pointer" />
         </div>
       </div>
     </div>

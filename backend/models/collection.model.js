@@ -7,4 +7,6 @@ const collectionSchema=new mongoose.Schema(
     contents:[{type:mongoose.Schema.Types.ObjectId,ref:'Content'}]
     }
 )
-export const Collection=mongoose.model('Collection',collectionSchema);
+ const Collection=mongoose.model('Collection',collectionSchema);
+ export default Collection;
+ 

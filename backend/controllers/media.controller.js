@@ -52,13 +52,14 @@ export const updateLikeCnt = async (req, res) => {
 };
 export const savedContent = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const { userId } = req.user._id;
     // if (!title || !description || !userId) {
     //   return res.status(400).json({
     //     success: false,
     //     message: "All fields are required",
     //   });
     // }
+    console.log(req.user);
     const {contentId}=req.params
     const content=await Content.findById(contentId);
     if(!content)
@@ -68,7 +69,9 @@ export const savedContent = async (req, res) => {
     if(content.savedBy.includes(userId))
     {
         //unsave request user id already present hence remove it
-        content.savedBy=content.savedBy.filter((id)=>id.toString()!==userId.toString());
+       content.savedBy = content.savedBy.filter(
+  (id) => id && id.toString() !== userId.toString()
+);
     }
     else
     {

@@ -1,4 +1,4 @@
-import { Collection } from "../models/collection.model.js";
+import  Collection  from "../models/collection.model.js";
 
 export const verifyCollectionOwner = async (req,res,next) => {
     try{

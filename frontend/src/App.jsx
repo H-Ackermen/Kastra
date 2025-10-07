@@ -5,6 +5,7 @@ import Login from './pages/login'
 import Signup from './pages/Signup'
 import ContenPage from './pages/ContenPage'
 import { createBrowserRouter,RouterProvider } from 'react-router'
+import ExplorePage from './pages/Explore'
 
 function App() {
   const router = createBrowserRouter([
@@ -27,7 +28,12 @@ function App() {
     {
       path:'/contentpage',
       element:<ContenPage/>
+    },
+    {
+      path:'/explore',
+      element:<ExplorePage/>
     }
+
 
   ])
 

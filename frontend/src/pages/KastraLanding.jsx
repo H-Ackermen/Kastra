@@ -2,6 +2,7 @@ import React from 'react';
 import { Camera, Palette, BookOpen, Sparkles, Users, Heart, Grid3x3 } from 'lucide-react';
 import { Link } from 'react-router';
 import Navbar from '@/components/Navbar';
+import SearchBar from '../components/SearchBar';
 
 
 export default function KastraLanding() {
@@ -32,7 +33,7 @@ export default function KastraLanding() {
     <div className="min-h-screen bg-slate-900 text-white">
       {/* Navigation */}
       <Navbar/>
-
+   
       {/* Hero Section */}
       <section className="container mx-auto px-6 py-20 text-center">
         <div className="max-w-3xl mx-auto">
