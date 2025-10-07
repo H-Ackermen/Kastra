@@ -1,30 +1,48 @@
-import React, { useEffect, useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useParams } from "react-router";
 import { collectionContext } from "../context/CollectionContext";
 import ContentCard from "../components/ContentCard";
+import Navbar from "../components/Navbar";
+import { Trash2 } from "lucide-react";
 
 const CollectionPage = () => {
   const { collectionId } = useParams();
-  const { fetchContentofCollection, collectionContent } = useContext(collectionContext);
+  const { collections,collectionContent, fetchContentofCollection, removeContentFromCollection } = useContext(collectionContext);
+  const collection = collections.find(c => c._id === collectionId);
 
-    useEffect(() => {
-    const fetchData = async () => {
-      await fetchContentofCollection();
-    };
-    fetchData();
-  }, []);
+  useEffect(() => {
+    fetchContentofCollection(collectionId);
+  }, [collectionId]);
+
+  const handleRemove = async (contentId) => {
+    await removeContentFromCollection(collectionId, { contentId });
+    // re-fetch after deletion to update the list
+    fetchContentofCollection(collectionId);
+  };
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Collection Contents</h1>
-      <div className="grid grid-cols-3 gap-4">
-        {collectionContent.length === 0 ? (
-          <p>No content in this collection yet.</p>
-        ) : (
-          collectionContent.map((content) => (
-           <ContentCard key={content._id} content={content} />
-          ))
-        )}
+    <div className="min-h-screen bg-gray-900 text-white">
+      <Navbar /> {/* Navbar added here */}
+      <div className="p-6">
+        <h1 className="text-2xl font-bold mb-6">{collection?.name}</h1>
+        <div className="flex flex-wrap gap-4">
+          {collectionContent.length === 0 ? (
+            <p className="text-gray-400">No contents in this collection!</p>
+          ) : (
+            collectionContent.map((content) => (
+              <div key={content._id} className="relative">
+                <ContentCard post={content} />
+                {/* Trash icon for removing content */}
+                <button
+                  onClick={() => handleRemove(content._id)}
+                  className="absolute top-2 right-2 bg-red-600 p-1 rounded-full hover:bg-red-700"
+                >
+                  <Trash2 className="w-5 h-5 text-white" />
+                </button>
+              </div>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import {Router} from 'express';
 import { verifyUserJWT } from '../middlewares/jwt.middleware.js';
 import { upload } from '../middlewares/multer.middleware.js';
-import { uploadAndCreateContent,fetchContentById,fetchAllContents,fetchContentsByUser } from '../controllers/content.controller.js';
+import { uploadAndCreateContent,fetchContentById,fetchAllContents,fetchContentsByUser, deleteContent } from '../controllers/content.controller.js';
 
 const contentRoutes = Router();
 
@@ -9,4 +9,5 @@ contentRoutes.post('/upload', verifyUserJWT, upload.single('file'), uploadAndCre
 contentRoutes.get('/get-content' ,  fetchAllContents);
 contentRoutes.get('/get-content/:id' ,  fetchContentById);
 contentRoutes.get('/get-content-user' ,verifyUserJWT,  fetchContentsByUser);
+contentRoutes.delete('/delete-content/:id' ,verifyUserJWT,  deleteContent);
 export default contentRoutes;

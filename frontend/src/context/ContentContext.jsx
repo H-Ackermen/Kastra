@@ -104,9 +104,27 @@ const [content, setContent] = useState(null);
     } 
   };
 
+  const deleteContent = async (contentId) => {
+  try {
+    const res = await axios.delete(`${API_URL}/api/content/delete-content/${contentId}`, {
+      withCredentials: true,
+    });
+    console.log(res.data);
+    
+    if (res.data.success) {
+      // Update frontend immediately
+      await fetchContentByUser()
+      console.log("Content deleted successfully");
+    }
+  } catch (err) {
+    console.error("Error deleting content:", err);
+    handleApiError(err);
+  }
+};
+
   return (
     <contentContext.Provider
-      value={{ uploadContent, updateLike, savedContent,fetchAllContent,fetchContentById,fetchContentByUser,content,contents,searchContent }}
+      value={{ uploadContent, updateLike, savedContent,fetchAllContent,fetchContentById,fetchContentByUser,content,contents,searchContent, deleteContent }}
     >
       {children}
     </contentContext.Provider>
