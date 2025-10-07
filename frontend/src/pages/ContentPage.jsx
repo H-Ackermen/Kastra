@@ -1,16 +1,15 @@
 import React from 'react'
 import Navbar from "@/components/Navbar";
-import AddCollection from '@/components/AddCollection';
 
-const ContenPage = () => {
+const ContentPage = () => {
   return (
     <div>
       <Navbar/>
-      <AddCollection/>
+      
 
       
     </div>
   )
 }
 
-export default ContenPage
+export default ContentPage

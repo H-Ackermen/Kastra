@@ -1,23 +1,26 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
 import { Link } from "react-router";
 import { Heart, BookmarkCheck, Bookmark } from "lucide-react";
+import { authContext } from "../context/AuthContext";
 
-const ContentCard = ({ post, currentUserId }) => {
+const ContentCard = ({ post}) => {
   const API_URL = import.meta.env.VITE_BACKEND_URL;
+  const {user,token} = useContext(authContext)
   const videoRef = useRef(null);
 
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [likeCount, setLikeCount] = useState(post.likecnt || 0);
+  const [likeCount, setLikeCount] = useState(post?.likecnt || 0);
 
   const isVideo = post.contentType === "video";
 
   // Initialize like/save state
-  useEffect(() => {
-    if (post?.likedBy?.includes(currentUserId)) setLiked(true);
-    if (post?.savedBy?.includes(currentUserId)) setSaved(true);
-  }, [post, currentUserId]);
+useEffect(() => {
+  if (!user?._id) return; // prevent accessing undefined user
+  if (post?.likedBy?.includes(user._id)) setLiked(true);
+  if (post?.savedBy?.includes(user._id)) setSaved(true);
+}, [post, user?._id]);
 
   // --------------------------
   //   VIDEO HOVER HANDLERS
@@ -35,8 +38,7 @@ const ContentCard = ({ post, currentUserId }) => {
   // --------------------------
   const handleLike = async () => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
+      if (!token || !user?._id) {
         alert("You need to be logged in to like!");
         return;
       }
@@ -54,8 +56,9 @@ const ContentCard = ({ post, currentUserId }) => {
       console.log("Like API Response:", res.status, res.data);
 
       if (res.status === 200 && res.data.success) {
-        setLikeCount(res.data.data.likecnt);
-        setLiked(res.data.data.liked);
+        setLikeCount(res.data.data.likecnt
+);
+        setLiked((prev) => !prev);
       } else if (res.status === 204) {
         console.warn("Got 204 - No Content from like API");
       }
@@ -69,8 +72,7 @@ const ContentCard = ({ post, currentUserId }) => {
   // --------------------------
   const handleSave = async () => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
+      if (!token || !user?._id) {
         alert("You need to be logged in to save content!");
         return;
       }

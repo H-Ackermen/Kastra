@@ -3,7 +3,7 @@ import KastraLanding from './pages/KastraLanding'
 import Dashboard from './pages/Dashboard'
 import Login from './pages/login'
 import Signup from './pages/Signup'
-import ContenPage from './pages/ContenPage'
+import ContentPage from './pages/ContentPage'
 import CollectionPage from './pages/CollectionPage'
 import { createBrowserRouter,RouterProvider } from 'react-router'
 import ExplorePage from './pages/Explore'
@@ -27,8 +27,8 @@ function App() {
       element:<Dashboard/>
     },
     {
-      path:'/contentpage',
-      element:<ContenPage/>
+      path:'/contentpage/:contentId',
+      element:<ContentPage/>
     },
     {
       path:'/explore',
