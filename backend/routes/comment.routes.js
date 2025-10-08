@@ -6,5 +6,5 @@ const commentRouter = express.Router();
 // Create a new comment
 commentRouter.post("/create-comment" ,verifyUserJWT, createCommentController);
 commentRouter.get("/get-comment/:contentId" , getCommentController);
-commentRouter.delete('/delete-comment' ,deleteCommentController);
+commentRouter.delete('/delete-comment/:commentId' ,verifyUserJWT ,deleteCommentController);
 export default commentRouter;

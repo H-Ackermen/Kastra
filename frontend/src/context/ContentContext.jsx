@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 
 import axios from "axios";
 import { errorContext } from "./ErrorContext";
@@ -11,7 +11,7 @@ const ContentContextProvider = ({ children }) => {
 const [content, setContent] = useState(null);
 
 
-  const uploadContent = async (formData) => {
+  const uploadContent = useCallback(async (formData) => {
     console.log("Uploading content with formData:", formData);
 
     try {
@@ -24,9 +24,9 @@ const [content, setContent] = useState(null);
       console.error("Error uploading content:", err);
       handleApiError(err);
     }
-  };
+  }, [API_URL, clearErrors, handleApiError]);
 
-  const updateLike = async (contentId) => {
+  const updateLike = useCallback(async (contentId) => {
     try {
       const result = await axios.put(`${API_URL}/api/media/${contentId}/like`);
       if (result) {
@@ -37,9 +37,9 @@ const [content, setContent] = useState(null);
     } catch (err) {
       console.log("something went wrong in ui integration of updateLike");
     }
-  };
+  }, [API_URL]);
 
-  const savedContent = async (contentId) => {
+  const savedContent = useCallback(async (contentId) => {
     try {
       const result = await axios.put(`${API_URL}/api/media/${contentId}/saved`);
       if (result) {
@@ -50,9 +50,9 @@ const [content, setContent] = useState(null);
     } catch (err) {
       console.log("something went wrong in ui integration of savedContent");
     }
-  };
+  }, [API_URL]);
 
-  const fetchAllContent = async () => {
+  const fetchAllContent = useCallback(async () => {
     try {
       const res = await axios.get(`${API_URL}/api/content/get-content`)
       console.log(res)
@@ -63,9 +63,9 @@ const [content, setContent] = useState(null);
       console.error("Error fetching content:", error);
       handleApiError(error);
     }
-  }
+  }, [API_URL, handleApiError]);
 
-  const fetchContentByUser = async () => {
+  const fetchContentByUser = useCallback(async () => {
     try {
       const res = await axios.get(`${API_URL}/api/content/get-content-user`,{withCredentials:true})
       console.log(res)
@@ -76,9 +76,9 @@ const [content, setContent] = useState(null);
       console.error("Error fetching content:", error);
       handleApiError(error);
     }
-  }
+  }, [API_URL, handleApiError]);
 
-  const fetchContentById = async (contentId) => {
+  const fetchContentById = useCallback(async (contentId) => {
     try {
       const res = await axios.get(`${API_URL}/api/content/get-content/${contentId}`)
       console.log(res)
@@ -89,9 +89,9 @@ const [content, setContent] = useState(null);
       console.error("Error fetching content:", error);
       handleApiError(error);
     }
-  }
+  }, [API_URL, handleApiError]);
 
-   const searchContent = async (queryType, queryValue) => {
+   const searchContent = useCallback(async (queryType, queryValue) => {
     try {
       const response = await axios.get(`${API_URL}/api/search`, {
         params: { [queryType]: queryValue },
@@ -102,9 +102,9 @@ const [content, setContent] = useState(null);
       console.error("Error searching:", err);
         handleApiError(err);
     } 
-  };
+  }, [API_URL, handleApiError]);
 
-  const deleteContent = async (contentId) => {
+  const deleteContent = useCallback(async (contentId) => {
   try {
     const res = await axios.delete(`${API_URL}/api/content/delete-content/${contentId}`, {
       withCredentials: true,
@@ -112,7 +112,6 @@ const [content, setContent] = useState(null);
     console.log(res.data);
     
     if (res.data.success) {
-      // Update frontend immediately
       await fetchContentByUser()
       console.log("Content deleted successfully");
     }
@@ -120,7 +119,7 @@ const [content, setContent] = useState(null);
     console.error("Error deleting content:", err);
     handleApiError(err);
   }
-};
+}, [API_URL, fetchContentByUser, handleApiError]);
 
   const getSavedContents = async () => {
     try {
