@@ -57,7 +57,7 @@ export default function Signup() {
         return; // stop submission
       }
       const user = await register(formData);
-      if (user) navigate("/dashboard");
+      if (user) navigate("/login");
     } catch (err) {
       console.log(err);
     }
