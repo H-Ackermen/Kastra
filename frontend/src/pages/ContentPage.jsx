@@ -7,7 +7,7 @@ import { contentContext } from "../context/ContentContext";
 import ContentCard from "../components/ContentCard";
 import Popover from '../components/Popover'
 import Navbar from "../components/Navbar"
-
+import Comment from "../components/Comment"
 export default function ContentPage() {
   const { contentId } = useParams();
   // Get API_URL and token from environment and context, similar to ContentCard
@@ -253,6 +253,7 @@ export default function ContentPage() {
                         <button className="mt-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors">
                           Post Comment
                         </button>
+                        <Comment/>
                       </div>
                     </div>
                   ) : (
