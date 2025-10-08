@@ -61,6 +61,7 @@ export const deleteCommentController = async(req , res)=>{
                 message : "comment does not exist"
             })
         }
+        console.log(typeof(_id));
         if(comment.user.toString() !== req.user._id.toString()){
             return res.status(403).json({
                 success : false,
