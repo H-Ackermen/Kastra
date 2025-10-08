@@ -47,18 +47,21 @@ export const getCommentController = async(req , res)=>{
     }
 };
 
-// delete comment 
+// delete comment   comments/delete-comment/68e56e9a24e17cac6dc1cd13
 
 export const deleteCommentController = async(req , res)=>{
     try{
         const comment = await Comment.findById(req.params.commentId);
+        console.log(comment);
+        console.log(req.user);
+        
         if(!comment) {
             return res.status(404).json({
                 success : false,
                 message : "comment does not exist"
             })
         }
-        if(comment.user.toString() !== req.user._id){
+        if(comment.user.toString() !== req.user._id.toString()){
             return res.status(403).json({
                 success : false,
                 message : "Not a authorized user to delete comment"
@@ -73,7 +76,7 @@ export const deleteCommentController = async(req , res)=>{
     catch(error){
         res.status(500).json({
             success : false,
-            message : "error deleting comment"
+            message : error.message,
         })
     }
 };
