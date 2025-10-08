@@ -122,9 +122,24 @@ const [content, setContent] = useState(null);
   }
 };
 
+  const getSavedContents = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/api/content/get-saved-content`,{withCredentials:true})
+      console.log(res.data)
+      if(res.data.success){
+        setContents(res.data.contents)
+        console.log("Contents fetched Successfully");
+      }
+    } catch (error) {
+      console.error("Error deleting content:", err);
+      handleApiError(err);
+    }
+  }
+
+
   return (
     <contentContext.Provider
-      value={{ uploadContent, updateLike, savedContent,fetchAllContent,fetchContentById,fetchContentByUser,content,contents,searchContent, deleteContent }}
+      value={{ uploadContent, updateLike, savedContent,fetchAllContent,fetchContentById,fetchContentByUser,content,contents,searchContent, deleteContent, getSavedContents }}
     >
       {children}
     </contentContext.Provider>

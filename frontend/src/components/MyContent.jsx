@@ -4,7 +4,7 @@ import { contentContext } from "../context/ContentContext";
 import ContentCard from "./ContentCard";
 
 const MyCollection = () => {
-  const { contents, fetchContentByUser, deleteContent } = useContext(contentContext);
+  const { contents, fetchContentByUser, removeSavedContents } = useContext(contentContext);
 
    useEffect(() => {
     const fetchData = async () => {
@@ -16,7 +16,7 @@ const MyCollection = () => {
     const handleDelete = async (id) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this content?");
     if (confirmDelete) {
-      await deleteContent(id);
+      await removeSavedContents(id);
     }
   };
   return (

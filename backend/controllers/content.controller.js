@@ -1,4 +1,5 @@
 import Content from "../models/content.model.js";
+import User from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/content.utils.js";
 import { addToCategory } from "../utils/category.utils.js";
 export const uploadAndCreateContent = async (req, res) => {
@@ -155,3 +156,31 @@ export const deleteContent = async (req, res) => {
       .json({ success: false, message: "Server error", error: err.message });
   }
 };
+
+export const getSavedContents = async (req, res) => {
+  try {
+    const userId = req.user._id; // assuming JWT middleware sets req.user
+
+    const user = await User.findById(userId).populate("savedContents");
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    const savedContents = user.savedContents || [];
+
+    res.status(200).json({
+      success: true,
+      count: savedContents.length,
+      contents: savedContents,
+      message:"Saved Content fetched Successfully "
+    });
+  } catch (error) {
+    console.error("Error fetching saved contents:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching saved contents",
+    });
+  }
+};
+

@@ -166,4 +166,5 @@ export const currentUser = (req, res) => {
     user: req.user,
     message: "User Fetched Successfully",
   });
+
 };
