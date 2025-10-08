@@ -97,7 +97,7 @@ const UploadContent = () => {
                     id="attachment"
                     type="file"
                     onChange={(e) => setFile(e.target.files[0])}
-                    required
+                    // required
                   />
                 </div>
 

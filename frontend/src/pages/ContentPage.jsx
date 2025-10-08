@@ -134,6 +134,7 @@ export default function ContentPage() {
         <video
           src={content.url}
           controls
+          autoPlay
           className="w-full h-auto rounded-lg bg-black"
         />
       );

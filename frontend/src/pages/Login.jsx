@@ -27,7 +27,7 @@ export default function Login() {
     e.preventDefault()
     try {
       const user = await login(formData)
-      if(user) navigate('/dashboard')
+      if(user) navigate('/explore')
     } catch (err) {
       console.log(err);
     }
