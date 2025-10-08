@@ -13,9 +13,9 @@ import { useContext, useEffect, useState } from "react"
 import { Plus } from "lucide-react"
 import { collectionContext } from "../context/CollectionContext"
 
-export default function SheetDemo() {
-  const { collections, fetchCollectionByUser } = useContext(collectionContext)
-  const [selectedCollections, setSelectedCollections] = useState([])
+export default function SheetDemo({contentId}) {
+  const { collections, fetchCollectionByUser,addContentToCollection } = useContext(collectionContext)
+  const [selectedCollectionId, setSelectedCollectionId] = useState("")
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,13 +25,23 @@ export default function SheetDemo() {
   }, [])
 
   const handleSelect = (id) => {
-    setSelectedCollections((prev) =>
-      prev.includes(id)
-        ? prev.filter((c) => c !== id)
-        : [...prev, id]
+    setSelectedCollectionId((prevId) => (prevId === id ? "" : id)
+     
     )
   }
-
+  const handleSubmit=async()=>
+  {
+    const res=await addContentToCollection(selectedCollectionId,{contentId});
+    if(res.data.alreadyAdded)
+    {
+      
+      alert("already saved");
+    }
+    else 
+    {
+      alert("content added successfully")
+    }
+  }
   return (
     <Sheet >
       <SheetTrigger asChild>
@@ -59,15 +69,15 @@ export default function SheetDemo() {
                 key={collection._id}
                 onClick={() => handleSelect(collection._id)}
                 className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${
-                  selectedCollections.includes(collection._id)
+                  selectedCollectionId===collection._id
                     ? "bg-violet-100 border-violet-400 shadow-md"
                     : "bg-white hover:bg-slate-50 border-slate-300"
                 }`}
               >
                 <div className="flex items-center gap-4">
                   <input
-                    type="checkbox"
-                    checked={selectedCollections.includes(collection._id)}
+                    type="radio"
+                     checked={selectedCollectionId === collection._id}
                     onChange={() => handleSelect(collection._id)}
                     className="appearance-none w-5 h-5 border-2 border-violet-400 rounded-full checked:bg-violet-500 checked:border-violet-500 cursor-pointer transition-all duration-200"
                   />
@@ -83,7 +93,8 @@ export default function SheetDemo() {
         <SheetFooter className="mt-6 flex justify-between">
           <Button
             type="submit"
-            className="w-full bg-violet-600 hover:bg-violet-700 text-white font-semibold py-2 rounded-lg shadow-sm"
+            className="w-full cursor-pointer bg-violet-600 hover:bg-violet-700 text-white font-semibold py-2 rounded-lg shadow-sm"
+            onClick={handleSubmit}
           >
             Save Changes
           </Button>

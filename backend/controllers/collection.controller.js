@@ -29,17 +29,25 @@ export const addContentToCollection = async (req,res) => {
     try{
 
         const {contentId} = req.body; // destructuring contentId 
-        console.log(contentId)
+        
+        //console.log("req.boyd=",req.body);
+       // console.log("content id=",contentId)
         // Prevent duplicates of Content
+        let alreadyAdded=false;
         if(req.collection.contents.includes(contentId)){
-            return res.status(400).json({success:false,message:"Content already added"})
+            alreadyAdded=true;
+            return res.status(200).json({success:false,message:"Content already added",
+                alreadyAdded
+            })
         }
         
         // pushing contentId into collection.Content array
         req.collection.contents.push(contentId)
         await req.collection.save();
 
-        return res.status(200).json({success:true,message:"Content added successfully", collection:req.collection})
+        return res.status(200).json({success:true,message:"Content added successfully", collection:req.collection,
+            alreadyAdded
+        })
     }
      catch(error){
         console.error("Error adding Content",error)

@@ -30,15 +30,18 @@ const CollectionContextProvider = ({ children }) => {
 
   const addContentToCollection = async (collectionId, formData) => {
     try {
+      console.log(formData);
       const res = await axios.put(
         `${API_URL}/api/collections/${collectionId}/add-content`,
         formData,
         { withCredentials: true }
       );
-      if (res.data.success) {
+      if (res.data.success)
+      {
         // update collection which is changed
         await fetchContentofCollection(collectionId)
       }
+      return res;
     } catch (error) {
       console.log("Error: ", error.message);
       handleApiError(error);

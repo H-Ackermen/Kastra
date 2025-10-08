@@ -216,7 +216,10 @@ export default function ContentPage() {
 
   
                    {/* <Plus className="w-5 h-5" /> */}
-                    <Popover/>
+                    <Popover 
+                   contentId={contentId} 
+                    
+                    />
 
                 
                 </div>

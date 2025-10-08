@@ -9,6 +9,7 @@ const CollectionPage = () => {
   const { collectionId } = useParams();
   const { collections,collectionContent, fetchContentofCollection, removeContentFromCollection } = useContext(collectionContext);
   const collection = collections.find(c => c._id === collectionId);
+  console.log("collection id of this collection",collectionId);
 
   useEffect(() => {
     fetchContentofCollection(collectionId);
