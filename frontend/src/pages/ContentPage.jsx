@@ -5,6 +5,8 @@ import { useParams } from "react-router";
 import { authContext } from "../context/AuthContext";
 import { contentContext } from "../context/ContentContext";
 import ContentCard from "../components/ContentCard";
+import Popover from '../components/Popover'
+import Navbar from "../components/Navbar"
 
 export default function ContentPage() {
   const { contentId } = useParams();
@@ -152,6 +154,7 @@ export default function ContentPage() {
 
   return (
     <div className="min-h-screen bg-slate-900 text-white">
+      <Navbar />
       <div className="container mx-auto px-4 sm:px-6 py-6">
         {/* Responsive YouTube-like layout */}
         <div className="flex flex-col lg:flex-row gap-6">
@@ -211,9 +214,11 @@ export default function ContentPage() {
                     <span>Save</span>
                   </button>
 
-                  <button className="flex items-center gap-2 px-4 py-2 bg-slate-700 text-gray-300 hover:bg-slate-600 rounded-lg transition-colors">
-                    <Plus className="w-5 h-5" />
-                  </button>
+  
+                   {/* <Plus className="w-5 h-5" /> */}
+                    <Popover/>
+
+                
                 </div>
               </div>
               <p className="text-gray-300 text-sm mt-2">

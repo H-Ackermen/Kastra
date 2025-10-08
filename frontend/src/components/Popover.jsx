@@ -10,7 +10,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { useContext, useEffect, useState } from "react"
-import { Folder } from "lucide-react"
+import { Plus } from "lucide-react"
 import { collectionContext } from "../context/CollectionContext"
 
 export default function SheetDemo() {
@@ -35,8 +35,8 @@ export default function SheetDemo() {
   return (
     <Sheet >
       <SheetTrigger asChild>
-        <Button variant="outline" className="flex items-center gap-2">
-          <Folder className="w-4 h-4" /> Add to Collection
+        <Button variant="outline" className="flex items-center ">
+          <Plus /> 
         </Button>
       </SheetTrigger>
 
