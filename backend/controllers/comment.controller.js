@@ -6,6 +6,8 @@ const router = express.Router();
 // add new comment
 export const createCommentController = async(req , res)=>{
     try{
+        console.log(req.body);
+        
         const {contentId,description} = req.body;
 
         const newComment = new Comment({
@@ -14,17 +16,21 @@ export const createCommentController = async(req , res)=>{
             description
         })
         await newComment.save();
-        res.status(201).json({
+        console.log("comment added");
+        return res.status(201).json({
             success : true,
             message : "Comment Added"
         })
+        
     }
     catch(error){
-        res.status(500).json({
+        console.log(error.message);
+        return res.status(500).json({
             success : false,
             message : "comment not added ",
             error:error.message
-
+            
+            
         })
     }
 };
@@ -33,14 +39,14 @@ export const createCommentController = async(req , res)=>{
 export const getCommentController = async(req , res)=>{
     try{
         const comments = await Comment.find({contentId : req.params.contentId}).populate("user" , "username").sort({createdAt : -1});
-        res.status(201).json({
+        return res.status(201).json({
             success : true,
             message : "comment fetched successfully",
             comments,
         })
     }   
     catch(err){
-        res.status(500).json({
+        return res.status(500).json({
             success : false,
             message : "comment fetching failed",
         })
@@ -52,8 +58,8 @@ export const getCommentController = async(req , res)=>{
 export const deleteCommentController = async(req , res)=>{
     try{
         const comment = await Comment.findById(req.params.commentId);
-        console.log(comment);
-        console.log(req.user);
+        // console.log(comment);
+        // console.log(req.user);
         
         if(!comment) {
             return res.status(404).json({
@@ -69,13 +75,13 @@ export const deleteCommentController = async(req , res)=>{
             })
         }
         await Comment.findByIdAndDelete(req.params.commentId);
-        res.status(200).json({
+       return res.status(200).json({
             success : true,
             message : "comment successfully deleted"
         })
     }
     catch(error){
-        res.status(500).json({
+        return res.status(500).json({
             success : false,
             message : error.message,
         })

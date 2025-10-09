@@ -1,25 +1,32 @@
 import React, { useState, useContext, useEffect } from "react";
-import axios from "axios"; // Import axios
+import axios from "axios";
 import { Heart, Bookmark, Plus } from "lucide-react";
 import { useParams } from "react-router";
 import { authContext } from "../context/AuthContext";
 import { contentContext } from "../context/ContentContext";
+import { CommentContext } from "../context/CommentContext";
 import ContentCard from "../components/ContentCard";
 import Popover from '../components/Popover'
 import Navbar from "../components/Navbar"
 import Comment from "../components/Comment"
+
 export default function ContentPage() {
   const { contentId } = useParams();
-  // Get API_URL and token from environment and context, similar to ContentCard
   const API_URL = import.meta.env.VITE_BACKEND_URL;
   const { user, token } = useContext(authContext);
   const { content, contents, fetchContentById, fetchAllContent } =
-    useContext(contentContext); // Removed updateLike, savedContent
+    useContext(contentContext);
+
+  // Comment context
+  const { comments, fetchComments, addComment,deleteComment } = useContext(CommentContext);
 
   const [isLiked, setIsLiked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [likeCnt, setLikeCnt] = useState(0);
   const [showComments, setShowComments] = useState(false);
+  const [reloadComments, setReloadComments] = useState(false);
+  // For new comment input
+  const [commentText, setCommentText] = useState("");
 
   // Fetch content and related data
   useEffect(() => {
@@ -35,7 +42,6 @@ export default function ContentPage() {
     if (!content) return;
     setLikeCnt(content.likecnt || 0);
     if (user?._id) {
-      // Use includes on the post data to initialize state
       setIsLiked(content?.likedBy?.includes(user._id));
       setIsSaved(content?.savedBy?.includes(user._id));
     } else {
@@ -44,21 +50,25 @@ export default function ContentPage() {
     }
   }, [content, user?._id]);
 
-  // --------------------------
-  //   LIKE HANDLER (Direct API Call like ContentCard)
-  // --------------------------
+  // Fetch comments when showComments is true and contentId changes
+  useEffect(() => {
+    const fetchData = async (contentId) => {
+      await fetchComments(contentId);
+
+    };
+    fetchData(contentId);
+  }, [showComments, contentId,reloadComments]);
+
+  // LIKE HANDLER
   const handleLike = async () => {
     if (!token || !user?._id || !content?._id) {
       alert("You need to be logged in to like!");
       return;
     }
-
-    // Optimistic Update
     const prevLiked = isLiked;
     const prevLikeCnt = likeCnt;
     setIsLiked((prev) => !prev);
     setLikeCnt((cnt) => cnt + (prevLiked ? -1 : 1));
-
     try {
       const res = await axios.put(
         `${API_URL}/api/media/update/${content._id}/like`,
@@ -69,36 +79,26 @@ export default function ContentPage() {
           },
         }
       );
-
-      // Revert if API call failed but state was optimistically updated
       if (res.status !== 200 && res.status !== 204) {
         setIsLiked(prevLiked);
         setLikeCnt(prevLikeCnt);
       } else if (res.status === 200 && res.data.success) {
-        // Update count with value from backend if available
         setLikeCnt(res.data.data.likecnt);
       }
     } catch (err) {
-      console.error("Error liking content:", err);
-      // Revert state on error
       setIsLiked(prevLiked);
       setLikeCnt(prevLikeCnt);
     }
   };
 
-  // --------------------------
-  //   SAVE HANDLER (Direct API Call like ContentCard)
-  // --------------------------
+  // SAVE HANDLER
   const handleSave = async () => {
     if (!token || !user?._id || !content?._id) {
       alert("You need to be logged in to save content!");
       return;
     }
-
-    // Optimistic Update
     const prevSaved = isSaved;
     setIsSaved((prev) => !prev);
-
     try {
       const res = await axios.put(
         `${API_URL}/api/media/update/${content._id}/saved`,
@@ -109,19 +109,29 @@ export default function ContentPage() {
           },
         }
       );
-
-      // Revert if API call failed but state was optimistically updated
       if (res.status !== 200 && res.status !== 204) {
         setIsSaved(prevSaved);
       }
     } catch (err) {
-      console.error("Error saving content:", err);
-      // Revert state on error
       setIsSaved(prevSaved);
     }
   };
 
-  // The rest of the component remains the same
+  // ADD COMMENT HANDLER
+  const handleAddComment = async () => {
+    if (!commentText.trim()) return;
+    await addComment({contentId, description: commentText })
+    setCommentText("")
+    setReloadComments((prev)=>!prev);
+  };
+
+  // Delete Comment
+  const handleDelete = async (commentId) => {
+    await deleteComment(commentId)
+    //  setCommentText("")
+    setReloadComments((prev)=>!prev);
+  };
+  // RENDER CONTENT (image/video)
   const renderContent = () => {
     if (!content)
       return (
@@ -157,7 +167,6 @@ export default function ContentPage() {
     <div className="min-h-screen bg-slate-900 text-white">
       <Navbar />
       <div className="container mx-auto px-4 sm:px-6 py-6">
-        {/* Responsive YouTube-like layout */}
         <div className="flex flex-col lg:flex-row gap-6">
           {/* LEFT SIDE: Main video + info + comments */}
           <div className="flex-1 flex flex-col gap-5">
@@ -223,6 +232,7 @@ export default function ContentPage() {
                     />
 
                 
+                  <Popover/>
                 </div>
               </div>
               <p className="text-gray-300 text-sm mt-2">
@@ -230,11 +240,11 @@ export default function ContentPage() {
               </p>
             </div>
 
-            {/* Comments */}
-            <div className="bg-slate-800 rounded-lg p-4">
+            {/* Comments Section */}
+            <div className="bg-slate-800 rounded-lg p-4" >
               <button
-                onClick={() => setShowComments(!showComments)}
-                className="text-lg font-semibold text-gray-200 hover:text-white transition-colors"
+                
+                className="text-lg font-semibold text-gray-200 hover:text-white transition-colors" onClick={() => setShowComments(!showComments)}
               >
                 Comments
               </button>
@@ -250,14 +260,18 @@ export default function ContentPage() {
                       </div>
                       <div className="flex-1">
                         <textarea
+                          value={commentText}
+                          onChange={e => setCommentText(e.target.value)}
                           placeholder="Add a comment..."
                           className="w-full bg-slate-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-600 resize-none"
                           rows="3"
                         />
-                        <button className="mt-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors">
+                        <button
+                          className="mt-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors"
+                          onClick={handleAddComment}
+                        >
                           Post Comment
                         </button>
-                        <Comment/>
                       </div>
                     </div>
                   ) : (
@@ -265,6 +279,21 @@ export default function ContentPage() {
                       Please login to comment
                     </p>
                   )}
+
+                  {/* Comments List */}
+                  {comments.length === 0 && (
+                    <p className="text-gray-400 text-center py-2">No comments yet.</p>
+                  )}
+                  {comments.map((c) => (
+                    <Comment
+                      key={c._id}
+                      commentId={c._id}
+                      text={c.description}
+                      commentedby={c.user?.username || "User"}
+                      handleDelete={handleDelete}
+                      time={c.createdAt}
+                    />
+                  ))}
                 </div>
               )}
             </div>

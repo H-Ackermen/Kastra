@@ -6,14 +6,17 @@ import AuthContextProvider from "./context/AuthContext.jsx";
 import ErrorContextProvider from "./context/ErrorContext.jsx";
 import  ContentContextProvider  from "./context/ContentContext.jsx";
 import CollectionContextProvider from "./context/CollectionContext.jsx";
+import { CommentProvider } from "./context/CommentContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ErrorContextProvider>
       <AuthContextProvider>
         <ContentContextProvider>
-          <CollectionContextProvider>        
+          <CollectionContextProvider>   
+          <CommentProvider>
             <App />
+            </CommentProvider>     
           </CollectionContextProvider>
         </ContentContextProvider>
       </AuthContextProvider>
