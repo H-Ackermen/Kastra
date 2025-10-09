@@ -4,6 +4,10 @@ const collectionSchema=new mongoose.Schema(
     owner :{type:mongoose.Schema.Types.ObjectId,ref:'User',required:true},
     name:{type:String,required:true},
     description:{type:String,required:true},
+    collaborators: {
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    default: [],
+  },
     contents:[{type:mongoose.Schema.Types.ObjectId,ref:'Content'}]
     }
 )

@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Folder, Trash2 } from "lucide-react";
+import { Folder, Trash } from "lucide-react";
 
 import { useNavigate } from "react-router";
 import { collectionContext } from "../context/CollectionContext";
@@ -28,7 +28,7 @@ const CollectionCard = ({ collection }) => {
         <button
           onClick={handleDelete}
         >
-          <Trash2 className="w-5 h-5 text-red-500" />
+          <Trash className = 'text-2xl'></Trash>
         </button>
       </div>
     </div>

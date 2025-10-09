@@ -3,7 +3,7 @@ import React, { useContext, useEffect } from "react";
 import { contentContext } from "../context/ContentContext";
 import ContentCard from "./ContentCard";
 
-const MyCollection = () => {
+const MyContent = () => {
   const { contents, fetchContentByUser,deleteContent } = useContext(contentContext);
 
    useEffect(() => {
@@ -42,4 +42,4 @@ const MyCollection = () => {
   );
 };
 
-export default MyCollection;
+export default MyContent;

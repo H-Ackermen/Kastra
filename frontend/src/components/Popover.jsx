@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetClose,
@@ -8,45 +8,73 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet"
-import { useContext, useEffect, useState } from "react"
-import { Plus } from "lucide-react"
-import { collectionContext } from "../context/CollectionContext"
+} from "@/components/ui/sheet";
+import { useContext, useEffect, useState } from "react";
+import { Plus } from "lucide-react";
+import { collectionContext } from "../context/CollectionContext";
 
-export default function SheetDemo({contentId}) {
-  const { collections, fetchCollectionByUser,addContentToCollection } = useContext(collectionContext)
-  const [selectedCollectionId, setSelectedCollectionId] = useState("")
+export default function SheetDemo({ contentId }) {
+  const {
+    collections,
+    collabCollections,
+    fetchCollectionByUser,
+    fetchCollectionByCollaborators, 
+    addContentToCollection,
+  } = useContext(collectionContext);
+
+  const [selectedCollectionId, setSelectedCollectionId] = useState("");
+  // const [ownerCollections, setOwnerCollections] = useState([]);
+  // const [collaboratorCollections, setCollaboratorCollections] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      await fetchCollectionByUser()
-    }
-    fetchData()
-  }, [])
+      await fetchCollectionByUser(); // fetch owner collections
+      await fetchCollectionByCollaborators(); // fetch collaborator collections
+    };
+    fetchData();
+  }, []);
 
   const handleSelect = (id) => {
-    setSelectedCollectionId((prevId) => (prevId === id ? "" : id)
-     
-    )
-  }
-  const handleSubmit=async()=>
-  {
-    const res=await addContentToCollection(selectedCollectionId,{contentId});
-    if(res.data.alreadyAdded)
-    {
-      
-      alert("already saved");
+    setSelectedCollectionId((prevId) => (prevId === id ? "" : id));
+  };
+
+  const handleSubmit = async () => {
+    const res = await addContentToCollection(selectedCollectionId, { contentId });
+    if (res.data.alreadyAdded) {
+      alert("Already saved");
+    } else {
+      alert("Content added successfully");
     }
-    else 
-    {
-      alert("content added successfully")
-    }
-  }
+  };
+
+  const renderCollectionList = (list) =>
+    list.map((collection) => (
+      <div
+        key={collection._id}
+        onClick={() => handleSelect(collection._id)}
+        className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${
+          selectedCollectionId === collection._id
+            ? "bg-violet-100 border-violet-400 shadow-md"
+            : "bg-white hover:bg-slate-50 border-slate-300"
+        }`}
+      >
+        <div className="flex items-center gap-4">
+          <input
+            type="radio"
+            checked={selectedCollectionId === collection._id}
+            onChange={() => handleSelect(collection._id)}
+            className="appearance-none w-5 h-5 border-2 border-violet-400 rounded-full checked:bg-violet-500 checked:border-violet-500 cursor-pointer transition-all duration-200"
+          />
+          <label className="text-lg font-medium text-gray-800">{collection.name}</label>
+        </div>
+      </div>
+    ));
+
   return (
-    <Sheet >
+    <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" className="flex items-center ">
-          <Plus /> 
+        <Button variant="outline" className="flex items-center">
+          <Plus />
         </Button>
       </SheetTrigger>
 
@@ -60,33 +88,21 @@ export default function SheetDemo({contentId}) {
           </SheetDescription>
         </SheetHeader>
 
-        <div className="mt-6 space-y-3 max-h-[60vh] overflow-y-auto ">
+        <div className="mt-6 space-y-3 max-h-[60vh] overflow-y-auto">
+          {/* Owner Collections */}
+          <h3 className="text-gray-600 font-semibold mb-2">Your Collections</h3>
           {collections.length === 0 ? (
-            <p className="text-gray-500 text-center mt-10">No collections yet!</p>
+            <p className="text-gray-500 text-center mt-2">No collections yet!</p>
           ) : (
-            collections.map((collection) => (
-              <div
-                key={collection._id}
-                onClick={() => handleSelect(collection._id)}
-                className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${
-                  selectedCollectionId===collection._id
-                    ? "bg-violet-100 border-violet-400 shadow-md"
-                    : "bg-white hover:bg-slate-50 border-slate-300"
-                }`}
-              >
-                <div className="flex items-center gap-4">
-                  <input
-                    type="radio"
-                     checked={selectedCollectionId === collection._id}
-                    onChange={() => handleSelect(collection._id)}
-                    className="appearance-none w-5 h-5 border-2 border-violet-400 rounded-full checked:bg-violet-500 checked:border-violet-500 cursor-pointer transition-all duration-200"
-                  />
-                  <label className="text-lg font-medium text-gray-800">
-                    {collection.name}
-                  </label>
-                </div>
-              </div>
-            ))
+            renderCollectionList(collections)
+          )}
+
+          {/* Collaborator Collections */}
+          <h3 className="text-gray-600 font-semibold mt-4 mb-2">Collaborations</h3>
+          {collabCollections.length === 0 ? (
+            <p className="text-gray-500 text-center mt-2">No collaborations yet!</p>
+          ) : (
+            renderCollectionList(collabCollections)
           )}
         </div>
 
@@ -106,5 +122,5 @@ export default function SheetDemo({contentId}) {
         </SheetFooter>
       </SheetContent>
     </Sheet>
-  )
+  );
 }
