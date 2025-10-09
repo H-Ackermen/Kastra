@@ -12,9 +12,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useContext, useState } from "react";
 import  {Link, useNavigate}  from "react-router";
+import { motion } from "framer-motion";
 import { authContext } from "../context/AuthContext";
 import { Alert, AlertDescription } from "@/components/ui/alert.jsx"
-import { AlertCircle } from "lucide-react"
+import { AlertCircle, Sparkles, Eye, EyeOff } from "lucide-react"
 import { errorContext } from "../context/ErrorContext";
 
 export default function Login() {
@@ -22,6 +23,7 @@ export default function Login() {
   const {login} = useContext(authContext)
   const {error,validationErrors} = useContext(errorContext)
   const [formData,setFormData] = useState({credential:'',password:''})
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleSubmit = async (e)=>{
     e.preventDefault()
@@ -49,65 +51,160 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex w-full justify-center items-center bg-slate-900">
-      <Card className="w-full max-w-sm bg-[#a855f7] text-[#1a293b]">
-        <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
-          <CardDescription className="text-[#1a293b]">
-            Enter your email below to login to your account
-          </CardDescription>
-          <CardAction>
-            <Link to="/signup">Sign-up</Link>
-          </CardAction>
-        </CardHeader>
-        <CardContent>
-          <form>
-            <div className="flex flex-col gap-6">
-               {error && (
-            <Alert variant="destructive" className="mb-4 border-0" >
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-              <div className="grid gap-2">
-                <Label htmlFor="email">Username / Email</Label>
-                <Input
-                  id='credential'
-                  type='text'
-                  placeholder="username / email"
-                  required
-                  name='credential'
-                  value = {formData.credential}
-                  onChange={handleChange}
-                />
-                {renderFieldError('credential')}
-
+    <div className="min-h-screen flex w-full justify-center items-center bg-gradient-to-br from-slate-50 via-white to-blue-50 modern-pattern">
+      <motion.div
+        initial={{ opacity: 0, y: 50, scale: 0.9 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="w-full max-w-md"
+      >
+        <Card className="modern-card border border-gray-200 shadow-xl">
+          <CardHeader className="text-center">
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="flex items-center justify-center gap-2 mb-4"
+            >
+              <div className="w-10 h-10 modern-gradient rounded-lg flex items-center justify-center">
+                <Sparkles className="w-6 h-6 text-white" />
               </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+              <span className="text-2xl font-bold modern-text modern-title">Kastra</span>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <CardTitle className="text-2xl modern-title text-gray-900">Welcome Back</CardTitle>
+              <CardDescription className="text-gray-600 modern-subtitle mt-2">
+                Sign in to your account to continue
+              </CardDescription>
+            </motion.div>
+          </CardHeader>
+          <CardContent>
+            <form>
+              <div className="flex flex-col gap-6">
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4 }}
                   >
-                    Forgot your password?
-                  </a>
-                </div>
-                <Input className="placeholder:text-red-500" id="password" type="password" name='password' value={formData.password} required onChange={handleChange}/>
-                {renderFieldError('password')}
+                    <Alert variant="destructive" className="modern-card border border-red-200">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription className="modern-subtitle">{error}</AlertDescription>
+                    </Alert>
+                  </motion.div>
+                )}
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="grid gap-2"
+                >
+                  <Label htmlFor="credential" className="modern-subtitle text-gray-700">Username / Email</Label>
+                  <Input
+                    id='credential'
+                    type='text'
+                    placeholder="Enter your username or email"
+                    required
+                    name='credential'
+                    value={formData.credential}
+                    onChange={handleChange}
+                    className="modern-input"
+                  />
+                  {renderFieldError('credential')}
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.6 }}
+                  className="grid gap-2"
+                >
+                  <div className="flex items-center">
+                    <Label htmlFor="password" className="modern-subtitle text-gray-700">Password</Label>
+                    <motion.a
+                      whileHover={{ scale: 1.05 }}
+                      href="#"
+                      className="ml-auto inline-block text-sm text-indigo-600 hover:text-indigo-700 modern-subtitle underline-offset-4 hover:underline"
+                    >
+                      Forgot password?
+                    </motion.a>
+                  </div>
+                  <div className="relative">
+                    <Input 
+                      id="password" 
+                      type={showPassword ? "text" : "password"} 
+                      name='password' 
+                      value={formData.password} 
+                      required 
+                      onChange={handleChange}
+                      placeholder="Enter your password"
+                      className="modern-input pr-10"
+                    />
+                    <motion.button
+                      type="button"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </motion.button>
+                  </div>
+                  {renderFieldError('password')}
+                </motion.div>
               </div>
-            </div>
-          </form>
-        </CardContent>
-        <CardFooter className="flex-col gap-2">
-          <Button type="submit" className="w-full" onClick={handleSubmit}>
-            Login
-          </Button>
-          <Button variant="outline" className="w-full">
-            Login with Google
-          </Button>
-        </CardFooter>
-      </Card>
+            </form>
+          </CardContent>
+          <CardFooter className="flex-col gap-3">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 }}
+              className="w-full"
+            >
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Button 
+                  type="submit" 
+                  className="w-full modern-button text-white modern-subtitle" 
+                  onClick={handleSubmit}
+                >
+                  Sign In
+                </Button>
+              </motion.div>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              className="w-full"
+            >
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Button variant="outline" className="w-full modern-card border border-gray-200 text-gray-700 hover:text-indigo-600 modern-subtitle">
+                  Continue with Google
+                </Button>
+              </motion.div>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.9 }}
+              className="text-center mt-4"
+            >
+              <p className="text-gray-600 modern-subtitle">
+                Don't have an account?{' '}
+                <motion.span whileHover={{ scale: 1.05 }}>
+                  <Link to="/signup" className="text-indigo-600 hover:text-indigo-700 font-medium modern-subtitle">
+                    Sign up
+                  </Link>
+                </motion.span>
+              </p>
+            </motion.div>
+          </CardFooter>
+        </Card>
+      </motion.div>
     </div>
   );
 }

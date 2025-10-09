@@ -7,6 +7,8 @@ import ContentPage from './pages/ContentPage'
 import CollectionPage from './pages/CollectionPage'
 import { createBrowserRouter,RouterProvider } from 'react-router'
 import ExplorePage from './pages/Explore'
+import About from './pages/About'
+import EditProfile from './pages/EditProfile'
 
 function App() {
   const router = createBrowserRouter([
@@ -37,6 +39,14 @@ function App() {
     {
       path:'/collections/:collectionId',
        element:<CollectionPage />
+    },
+    {
+      path:'/about',
+       element:<About/>
+    },
+    {
+      path:'/edit-profile',
+       element:<EditProfile/>
     }
   ])
   return (

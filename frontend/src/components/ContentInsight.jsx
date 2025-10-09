@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { TrendingUp, Eye, ThumbsUp, Bookmark } from 'lucide-react';
+import { motion } from 'framer-motion';
 import axios from 'axios';
 
 export default function ContentInsights({ userId }) {
@@ -76,64 +77,99 @@ export default function ContentInsights({ userId }) {
     fetchAnalytics();
   }, [userId, period, API_URL]);
 
-  const StatCard = ({ icon: Icon, label, value, color }) => (
-    <div className="bg-white rounded-lg shadow p-6 flex items-center gap-4 border-l-4" style={{ borderColor: color }}>
-      <div style={{ backgroundColor: `${color}20` }} className="p-3 rounded-lg">
+  const StatCard = ({ icon: Icon, label, value, color, delay = 0 }) => (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay }}
+      whileHover={{ scale: 1.02, y: -5 }}
+      className="modern-card rounded-xl shadow-lg p-6 flex items-center gap-4 border-l-4 modern-pattern relative" 
+      style={{ borderColor: color }}
+    >
+      <motion.div 
+        whileHover={{ scale: 1.1, rotate: 5 }}
+        style={{ backgroundColor: `${color}15` }} 
+        className="p-3 rounded-lg border border-gray-200"
+      >
         <Icon style={{ color }} size={24} />
-      </div>
+      </motion.div>
       <div>
-        <p className="text-gray-600 text-sm">{label}</p>
-        <p className="text-2xl font-bold text-gray-900">{value.toLocaleString()}</p>
+        <p className="text-gray-600 text-sm modern-subtitle">{label}</p>
+        <p className="text-2xl font-bold text-gray-900 modern-title">{value.toLocaleString()}</p>
       </div>
-    </div>
+    </motion.div>
   );
 
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white p-3 rounded shadow-lg border border-gray-200">
-          <p className="text-sm font-semibold text-gray-800">{payload[0].payload.date}</p>
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="modern-card p-3 rounded-lg shadow-lg border border-gray-200"
+        >
+          <p className="text-sm font-semibold text-gray-900 modern-subtitle">{payload[0].payload.date}</p>
           {payload.map((entry, index) => (
-            <p key={index} style={{ color: entry.color }} className="text-sm">
+            <p key={index} style={{ color: entry.color }} className="text-sm modern-subtitle">
               {entry.name}: {entry.value.toLocaleString()}
             </p>
           ))}
-        </div>
+        </motion.div>
       );
     }
     return null;
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 p-8 modern-pattern">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="flex items-center justify-between mb-8"
+        >
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
-              <TrendingUp className="text-blue-600" size={32} />
-              Content Insights
+            <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2 modern-title">
+              <motion.div
+                animate={{ rotate: [0, 10, -10, 0] }}
+                transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+              >
+                <TrendingUp className="text-indigo-600" size={32} />
+              </motion.div>
+              <span className="modern-text">Content Insights</span>
             </h1>
-            <p className="text-gray-600 mt-1">Track your content performance</p>
+            <p className="text-gray-600 mt-1 modern-subtitle">Track your content performance with beautiful analytics</p>
           </div>
-        </div>
+        </motion.div>
 
         {/* Period Selector */}
-        <div className="flex gap-3 mb-8">
-          {['daily', 'weekly', 'monthly'].map((p) => (
-            <button
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="flex gap-3 mb-8"
+        >
+          {['daily', 'weekly', 'monthly'].map((p, index) => (
+            <motion.button
               key={p}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 * index }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setPeriod(p)}
-              className={`px-6 py-2 rounded-lg font-semibold transition-all ${
+              className={`px-6 py-2 rounded-lg font-semibold transition-all modern-subtitle ${
                 period === p
-                  ? 'bg-blue-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 shadow'
+                  ? 'modern-button text-white shadow-lg'
+                  : 'modern-card text-gray-600 hover:bg-indigo-50 border border-gray-200 hover:border-indigo-200'
               }`}
             >
               {p.charAt(0).toUpperCase() + p.slice(1)}
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -141,95 +177,124 @@ export default function ContentInsights({ userId }) {
             icon={Eye}
             label="Total Views"
             value={stats.totalViews}
-            color="#3b82f6"
+            color="#6366f1"
+            delay={0.1}
           />
           <StatCard
             icon={ThumbsUp}
             label="Total Likes"
             value={stats.totalLikes}
-            color="#ef4444"
+            color="#f59e0b"
+            delay={0.2}
           />
           <StatCard
             icon={Bookmark}
             label="Total Saves"
             value={stats.totalSaves}
-            color="#f59e0b"
+            color="#10b981"
+            delay={0.3}
           />
         </div>
 
         {/* Charts */}
         {loading ? (
-          <div className="bg-white rounded-lg shadow p-12 flex items-center justify-center">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="modern-card rounded-xl shadow-lg p-12 flex items-center justify-center"
+          >
             <div className="text-center">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-              <p className="text-gray-600">Loading analytics...</p>
+              <motion.div 
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                className="inline-block rounded-full h-12 w-12 border-b-2 border-indigo-500 mb-4"
+              />
+              <p className="text-gray-600 modern-subtitle">Loading analytics...</p>
             </div>
-          </div>
+          </motion.div>
         ) : error ? (
-          <div className="bg-white rounded-lg shadow p-8 border-l-4 border-red-500">
-            <p className="text-red-600 font-semibold">Error loading analytics</p>
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="modern-card rounded-xl shadow-lg p-8 border-l-4 border-red-500"
+          >
+            <p className="text-red-600 font-semibold modern-subtitle">Error loading analytics</p>
             <p className="text-gray-600 text-sm mt-1">{error}</p>
-          </div>
+          </motion.div>
         ) : data.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-12 text-center">
-            <p className="text-gray-600">No data available for the selected period</p>
-          </div>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="modern-card rounded-xl shadow-lg p-12 text-center"
+          >
+            <p className="text-gray-600 modern-subtitle">No data available for the selected period</p>
+          </motion.div>
         ) : (
           <>
             {/* Line Chart */}
-            <div className="bg-white rounded-lg shadow p-6 mb-8">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Performance Trend</h2>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="modern-chart rounded-xl shadow-lg p-6 mb-8"
+            >
+              <h2 className="text-lg font-semibold text-gray-900 mb-4 modern-title">Performance Trend</h2>
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={data}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis dataKey="date" stroke="#9ca3af" />
-                  <YAxis stroke="#9ca3af" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <XAxis dataKey="date" stroke="#64748b" />
+                  <YAxis stroke="#64748b" />
                   <Tooltip content={<CustomTooltip />} />
                   <Legend />
                   <Line
                     type="monotone"
                     dataKey="views"
-                    stroke="#3b82f6"
-                    strokeWidth={2}
-                    dot={{ r: 4 }}
-                    activeDot={{ r: 6 }}
+                    stroke="#6366f1"
+                    strokeWidth={3}
+                    dot={{ r: 4, fill: "#6366f1" }}
+                    activeDot={{ r: 6, fill: "#6366f1" }}
                   />
                   <Line
                     type="monotone"
                     dataKey="likes"
-                    stroke="#ef4444"
-                    strokeWidth={2}
-                    dot={{ r: 4 }}
-                    activeDot={{ r: 6 }}
+                    stroke="#f59e0b"
+                    strokeWidth={3}
+                    dot={{ r: 4, fill: "#f59e0b" }}
+                    activeDot={{ r: 6, fill: "#f59e0b" }}
                   />
                   <Line
                     type="monotone"
                     dataKey="saves"
-                    stroke="#f59e0b"
-                    strokeWidth={2}
-                    dot={{ r: 4 }}
-                    activeDot={{ r: 6 }}
+                    stroke="#10b981"
+                    strokeWidth={3}
+                    dot={{ r: 4, fill: "#10b981" }}
+                    activeDot={{ r: 6, fill: "#10b981" }}
                   />
                 </LineChart>
               </ResponsiveContainer>
-            </div>
+            </motion.div>
 
             {/* Bar Chart */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Engagement Comparison</h2>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+              className="modern-chart rounded-xl shadow-lg p-6"
+            >
+              <h2 className="text-lg font-semibold text-gray-900 mb-4 modern-title">Engagement Comparison</h2>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={data}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis dataKey="date" stroke="#9ca3af" />
-                  <YAxis stroke="#9ca3af" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <XAxis dataKey="date" stroke="#64748b" />
+                  <YAxis stroke="#64748b" />
                   <Tooltip content={<CustomTooltip />} />
                   <Legend />
-                  <Bar dataKey="views" fill="#3b82f6" radius={[8, 8, 0, 0]} />
-                  <Bar dataKey="likes" fill="#ef4444" radius={[8, 8, 0, 0]} />
-                  <Bar dataKey="saves" fill="#f59e0b" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="views" fill="#6366f1" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="likes" fill="#f59e0b" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="saves" fill="#10b981" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
-            </div>
+            </motion.div>
           </>
         )}
       </div>

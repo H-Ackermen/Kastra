@@ -28,7 +28,7 @@ const CollectionPage = () => {
     await removeCollaborator(collectionId,{collaboratorId})
   }
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
+    <div className="min-h-screen text-gray-100">
       <Navbar />
 
       {/* Header */}
