@@ -20,6 +20,7 @@ import {
   BookOpen,
   Image,
 } from "lucide-react";
+import { motion } from "framer-motion";
 
 import Navbar from "@/components/Navbar";
 import UploadContent from "../components/UploadContent";
@@ -43,29 +44,50 @@ export default function KastraDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white  ">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 text-gray-900 modern-pattern">
       {/* Top Navigation */}
       <Navbar />
-      {/* Stats */}
-      {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 mt-8">
-        {stats.map((stat, i) => (
-          <div
-            key={i}
-            className="bg-slate-800 rounded-lg p-6 border border-slate-700"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-gray-400 text-sm">{stat.label}</span>
-              <div className="text-purple-400">{stat.icon}</div>
-            </div>
-            <p className="text-2xl font-bold">{stat.value}</p>
-          </div>
-        ))}
-      </div> */}
+      
+      {/* Welcome Section */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="container mx-auto px-6 py-8"
+      >
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold modern-title text-gray-900 mb-2">
+            Welcome back, <span className="modern-text">{user?.username || 'Creator'}</span>!
+          </h1>
+          <p className="text-gray-600 modern-subtitle">
+            Manage your creative works and track your progress
+          </p>
+        </div>
+      </motion.div>
 
-      <ContentInsights userId={user?._id} />
-      <div>
+      {/* Content Insights */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+      >
+        <ContentInsights userId={user?._id} />
+      </motion.div>
+
+      {/* Navigation and Content */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.4 }}
+        className="container mx-auto px-6 pb-8"
+      >
         <NavigationMenu activebtn={activebtn} setActivebtn={setActivebtn} />
-        <div>
+        <motion.div
+          key={activebtn}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3 }}
+        >
           {activebtn === "mycontent" ? (
             <MyContent />
           ) : activebtn === "mycollection" ? (
@@ -73,9 +95,8 @@ export default function KastraDashboard() {
           ) : activebtn === "mysaved" ? (
             <MySaved />
           ) : null}
-        </div>
-      </div>
-      {/* <UploadContent /> */}
+        </motion.div>
+      </motion.div>
     </div>
   );
 }

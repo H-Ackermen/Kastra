@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
 import { Link } from "react-router";
 import { Heart, BookmarkCheck, Bookmark } from "lucide-react";
+import { motion } from "framer-motion";
 import { authContext } from "../context/AuthContext";
 
 const ContentCard = ({ post}) => {
@@ -105,8 +106,12 @@ useEffect(() => {
   //   RENDER COMPONENT
   // --------------------------
   return (
-    <div
-      className="relative w-80 rounded-lg shadow-md overflow-hidden  hover:scale-[1.02] transition-transform"
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ scale: 1.02, y: -5 }}
+      transition={{ duration: 0.3 }}
+      className="relative w-80 modern-card rounded-xl shadow-lg overflow-hidden transition-all duration-300 modern-pattern"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -132,39 +137,46 @@ useEffect(() => {
       </Link>
 
       {/* Content Info */}
-      <div className="p-4 bg-gradient-to-r from-blue-500 to-violet-500 opacity-90">
-        <h2 className="text-lg font-semibold mb-2 truncate">
+      <div className="p-4 modern-gradient opacity-95">
+        <h2 className="text-lg font-semibold mb-2 truncate text-white modern-title">
           {post.title || "Untitled"}
         </h2>
-        <p className="text-sm text-gray-200 line-clamp-3">
+        <p className="text-sm text-gray-100 line-clamp-3 modern-subtitle">
           {post.description || "No description available."}
         </p>
 
         <div className="flex justify-between mt-4 items-center">
           {/* Like Button */}
-          <div
-            className="flex items-center gap-2 cursor-pointer"
+          <motion.div
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="flex items-center gap-2 cursor-pointer transition-transform duration-200"
             onClick={handleLike}
           >
             <Heart
               className={`w-5 h-5 transition-colors duration-200 ${
-                liked ? "text-red-500 fill-red-500" : "text-red-500"
+                liked ? "text-red-300 fill-red-300" : "text-white"
               }`}
             />
-            <span>{likeCount}</span>
-          </div>
+            <span className="text-white modern-subtitle">{likeCount}</span>
+          </motion.div>
 
           {/* Save Button */}
-          <div className="cursor-pointer" onClick={handleSave}>
+          <motion.div 
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="cursor-pointer transition-transform duration-200" 
+            onClick={handleSave}
+          >
             {saved ? (
-              <BookmarkCheck className="text-yellow-300" />
+              <BookmarkCheck className="text-yellow-300 w-5 h-5" />
             ) : (
-              <Bookmark className="text-white" />
+              <Bookmark className="text-white w-5 h-5" />
             )}
-          </div>
+          </motion.div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
