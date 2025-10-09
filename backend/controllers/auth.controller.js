@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
+import sendEmail from "../utils/sendEmail.js";
 
 const generateToken = async (id) => {
   try {
@@ -37,7 +38,6 @@ export const registerUser = async (req, res) => {
       email,
       password,
     });
-
     // Generate JWT Token
     const accessToken = await generateToken(user._id);
     console.log(accessToken);

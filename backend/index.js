@@ -34,6 +34,7 @@ import searchRoutes from './routes/search.routes.js'
 import contentRoutes from './routes/content.route.js'
 import commentRoutes from './routes/comment.routes.js'
 import insightRoutes from './routes/insight.routes.js'
+import userRoutes from './routes/user.route.js'
 
 
 // api endpoints
@@ -44,6 +45,8 @@ app.use("/api/collections",collectionRouter)
 app.use("/api/search",searchRoutes);
 app.use("/api/comments" , commentRoutes);
 app.use("/api/analytics", insightRoutes);
+app.use("/api/users",userRoutes)
+
 // Start Server
 const startServer = async () => {
   try {

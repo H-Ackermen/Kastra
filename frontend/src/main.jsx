@@ -7,13 +7,18 @@ import ErrorContextProvider from "./context/ErrorContext.jsx";
 import  ContentContextProvider  from "./context/ContentContext.jsx";
 import CollectionContextProvider from "./context/CollectionContext.jsx";
 import { CommentProvider } from "./context/CommentContext.jsx";
+<<<<<<< Updated upstream
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+=======
+import FollowContextProvider from "./context/FollowContext.jsx";
+>>>>>>> Stashed changes
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ErrorContextProvider>
       <AuthContextProvider>
+        <FollowContextProvider>
         <ContentContextProvider>
           <CollectionContextProvider>   
           <CommentProvider>
@@ -33,6 +38,7 @@ createRoot(document.getElementById("root")).render(
             </CommentProvider>     
           </CollectionContextProvider>
         </ContentContextProvider>
+        </FollowContextProvider>
       </AuthContextProvider>
     </ErrorContextProvider>
   </StrictMode>

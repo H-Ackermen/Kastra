@@ -34,9 +34,7 @@ const CollectionCard = ({ collection,isOwner }) => {
           <Trash className = 'text-red-600 text-2xl'></Trash>
         </button>) : (<button
           onClick={handleRemove}
-        >
-          
-          <X className = 'text-red-600 text-2xl'></X>
+        ><X className = 'text-red-600 text-2xl'></X>
         </button>)}
        
       </div>
