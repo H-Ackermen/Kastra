@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from 'axios'
 import { errorContext } from "./ErrorContext";
+import { toast } from 'react-toastify';
 
 export const authContext = createContext();
 
@@ -42,6 +43,7 @@ const AuthContextProvider = ({ children }) => {
       const { user, token } = res.data;     
       setToken(token);     
       setUser(user);
+      toast.success("Account created successfully! Welcome to Kastra!");
       return user;
     } catch (error) {
       console.log(error.message);
@@ -58,6 +60,7 @@ const AuthContextProvider = ({ children }) => {
       const { user, token } = res.data;     
       setToken(token);     
       setUser(user);
+      toast.success(`Welcome back, ${user.username || user.name}!`);
       return user;
     } catch (error) {
       console.log(error.message);
@@ -72,6 +75,7 @@ const AuthContextProvider = ({ children }) => {
       await axios.post(`${API_URL}/api/auth/logout-user`, {withCredentials:true});
       setToken(null);
       setUser(null);
+      toast.success("Logged out successfully!");
       // localStorage.removeItem("token");
     } catch (error) {
       console.log(error.message);

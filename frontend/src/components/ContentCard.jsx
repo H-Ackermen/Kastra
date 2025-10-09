@@ -4,6 +4,7 @@ import { Link } from "react-router";
 import { Heart, BookmarkCheck, Bookmark } from "lucide-react";
 import { motion } from "framer-motion";
 import { authContext } from "../context/AuthContext";
+import { toast } from 'react-toastify';
 
 const ContentCard = ({ post}) => {
   const API_URL = import.meta.env.VITE_BACKEND_URL;
@@ -40,7 +41,7 @@ useEffect(() => {
   const handleLike = async () => {
     try {
       if (!token || !user?._id) {
-        alert("You need to be logged in to like!");
+        toast.error("You need to be logged in to like!");
         return;
       }
 
@@ -73,7 +74,7 @@ useEffect(() => {
   const handleSave = async () => {
     try {
       if (!token || !user?._id) {
-        alert("You need to be logged in to save content!");
+        toast.error("You need to be logged in to save content!");
         return;
       }
 

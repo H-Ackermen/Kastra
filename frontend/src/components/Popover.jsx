@@ -12,6 +12,7 @@ import {
 import { useContext, useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { collectionContext } from "../context/CollectionContext";
+import { toast } from 'react-toastify';
 
 export default function SheetDemo({ contentId }) {
   const {
@@ -39,9 +40,9 @@ export default function SheetDemo({ contentId }) {
   const handleSubmit = async () => {
     const res = await addContentToCollection(selectedCollectionId, { contentId });
     if (res.data.alreadyAdded) {
-      alert("Already saved");
+      toast.warning("Already saved");
     } else {
-      alert("Content added successfully");
+      toast.success("Content added successfully");
     }
   };
 

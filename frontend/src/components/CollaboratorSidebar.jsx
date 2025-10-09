@@ -13,6 +13,7 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import { collectionContext } from "../context/CollectionContext";
 import { useContext } from "react";
+import { toast } from 'react-toastify';
 
 export default function AddCollaboratorSheet({ collectionId }) {
   const { addCollaborator } = useContext(collectionContext);
@@ -20,7 +21,7 @@ export default function AddCollaboratorSheet({ collectionId }) {
 
   const handleSubmit = async () => {
     if (!email) {
-      alert("Please enter a valid email");
+      toast.error("Please enter a valid email");
       return;
     }
 

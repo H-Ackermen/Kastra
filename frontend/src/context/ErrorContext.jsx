@@ -1,4 +1,5 @@
 import { createContext, useState } from "react";
+import { toast } from 'react-toastify';
 
 export const errorContext = createContext()
 
@@ -17,13 +18,19 @@ const ErrorContextProvider = ({children})=>{
                 setValidationErrors(err.response.data.errors);
                 return;
             }
-            setError(err.response.data.message || 'An error occurred')
+            const errorMessage = err.response.data.message || 'An error occurred';
+            setError(errorMessage);
+            toast.error(errorMessage);
         }
         else if(err.request){
-            setError('Network error. Please check your connection')
+            const networkError = 'Network error. Please check your connection';
+            setError(networkError);
+            toast.error(networkError);
         }
         else{
-            setError('An unexpected error occurred')
+            const unexpectedError = 'An unexpected error occurred';
+            setError(unexpectedError);
+            toast.error(unexpectedError);
         }
         throw err;
     }

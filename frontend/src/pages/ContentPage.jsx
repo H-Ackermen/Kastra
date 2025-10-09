@@ -10,6 +10,7 @@ import ContentCard from "../components/ContentCard";
 import Popover from '../components/Popover'
 import Navbar from "../components/Navbar"
 import Comment from "../components/Comment"
+import { toast } from 'react-toastify';
 
 export default function ContentPage() {
   const { contentId } = useParams();
@@ -63,7 +64,7 @@ export default function ContentPage() {
   // LIKE HANDLER
   const handleLike = async () => {
     if (!token || !user?._id || !content?._id) {
-      alert("You need to be logged in to like!");
+      toast.error("You need to be logged in to like!");
       return;
     }
     const prevLiked = isLiked;
@@ -95,7 +96,7 @@ export default function ContentPage() {
   // SAVE HANDLER
   const handleSave = async () => {
     if (!token || !user?._id || !content?._id) {
-      alert("You need to be logged in to save content!");
+      toast.error("You need to be logged in to save content!");
       return;
     }
     const prevSaved = isSaved;

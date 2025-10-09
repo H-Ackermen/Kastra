@@ -2,60 +2,60 @@ import Content from "../models/content.model.js";
 import User from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/content.utils.js";
 import { addToCategory } from "../utils/category.utils.js";
-import  {updateDailyEngagement}  from "../utils/engagement.util.js"
+import { updateDailyEngagement } from "../utils/engagement.util.js"
 
 export const uploadAndCreateContent = async (req, res) => {
   try {
-  console.log("Running uploadAndCreateContents");
+    console.log("Running uploadAndCreateContents");
 
-  const file = req.file;
-  console.log(req.body);
-  const { title, description, category } = req.body;
+    const file = req.file;
+    console.log(req.body);
+    const { title, description, category } = req.body;
+    let result=null;
+    const owner = req.user._id;
+    if (file) {
 
-  const owner = req.user._id;
-if(file){
 
-  
-  if (file.mimetype.startsWith("image/") && file.size > 10 * 1024 * 1024) {
-    return res.status(400).json({
-      success: false,
-      message: "Image size should be less than 10MB",
+      if (file.mimetype.startsWith("image/") && file.size > 10 * 1024 * 1024) {
+        return res.status(400).json({
+          success: false,
+          message: "Image size should be less than 10MB",
+        });
+      }
+      if (file.mimetype.startsWith("video/") && file.size > 100 * 1024 * 1024) {
+        return res.status(400).json({
+          success: false,
+          message: "Video size should be less than 100MB",
+        });
+      }
+      if (!title || !description) {
+        return res.status(400).json({
+          success: false,
+          message: "Title and description are required",
+        });
+      }
+
+      // Upload to Cloudinary
+      result = await uploadOnCloudinary(file.path);
+      if (!result) {
+        return res.status(500).json({
+          success: false,
+          message: "Failed to upload file to Cloudinary",
+        });
+      }
+
+    }
+    // Save content in DB
+
+    const newContent = new Content({
+      owner,
+      title,
+      description,
+      url: file ? result.secure_url : null,
+      // saare types ke liye
+      contentType: file ? result.resource_type : 'article',
     });
-  }
-  if (file.mimetype.startsWith("video/") && file.size > 100 * 1024 * 1024) {
-    return res.status(400).json({
-      success: false,
-      message: "Video size should be less than 100MB",
-    });
-  }
-  if (!title || !description) {
-    return res.status(400).json({
-      success: false,
-      message: "Title and description are required",
-    });
-  }
-  
-  // Upload to Cloudinary
-  const result = await uploadOnCloudinary(file.path);
-  if (!result) {
-    return res.status(500).json({
-      success: false,
-      message: "Failed to upload file to Cloudinary",
-    });
-  }
-  
-}
-  // Save content in DB
-  
-  const newContent = new Content({
-    owner,
-    title,
-    description,
-    url: file ? result.secure_url : null,
-    // saare types ke liye
-    contentType: file ? result.resource_type : 'article',
-  });
-  
+
 
     await newContent.save();
     await addToCategory(newContent._id, category);
@@ -111,7 +111,7 @@ export const fetchContentById = async (req, res) => {
         message: "Content not found",
       });
     }
-     await updateDailyEngagement(id, { views: 1 });
+    await updateDailyEngagement(id, { views: 1 });
     return res.status(200).json({
       success: true,
       message: "Content fetched successfully",
@@ -177,7 +177,7 @@ export const getSavedContents = async (req, res) => {
       success: true,
       count: savedContents.length,
       contents: savedContents,
-      message:"Saved Content fetched Successfully "
+      message: "Saved Content fetched Successfully "
     });
   } catch (error) {
     console.error("Error fetching saved contents:", error);

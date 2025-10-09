@@ -15,14 +15,14 @@ const Comment = ({ text, commentedby, time, commentId, handleDelete }) => {
   };
 
   return (
-    <div className="w-full p-3 border-b border-gray-700 flex justify-between items-start text-white">
+    <div className="w-full p-3 border-b border-gray-700 flex justify-between items-start text-black">
       {/* Left section - Comment content */}
       <div className="flex flex-col">
-        <p className="text-gray-100 text-sm">{text}</p>
-        <div className="flex items-center gap-2 text-xs text-gray-400 mt-1">
-          <span className="font-medium text-gray-300">{commentedby}</span>
+        <p className="text-black text-sm">{text}</p>
+        <div className="flex items-center gap-2 text-xs text-black mt-1">
+          <span className="font-medium text-black">{commentedby}</span>
           <span>•</span>
-          <span>{formatDate(time)}</span>
+          <span className="text-black">{formatDate(time)}</span>
         </div>
       </div>
 

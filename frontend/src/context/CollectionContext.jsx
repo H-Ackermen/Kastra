@@ -1,6 +1,7 @@
 import { createContext, useContext, useState } from "react";
 import { errorContext } from "./ErrorContext";
 import axios from "axios";
+import { toast } from 'react-toastify';
 
 export const collectionContext = createContext();
 
@@ -122,16 +123,16 @@ const CollectionContextProvider = ({ children }) => {
       );
       if (res.data.success) {
         if (res.data.alreadyExists) {
-          alert("This user is already a collaborator!");
+          toast.warning("This user is already a collaborator!");
         } else  {
-          alert("Collaborator added successfully!");
+          toast.success("Collaborator added successfully!");
         }
         console.log(res.data.message);
         await fetchCollaborators(collectionId);
       }
     } catch (error) {
       console.log("Error ",  error.message);
-      alert(error.message);
+      toast.error(error.message);
       handleApiError(error);
     }
   };
@@ -176,7 +177,7 @@ const CollectionContextProvider = ({ children }) => {
       );
       if (res.data.success) {
         await fetchCollaborators(collectionId)
-        alert("Removed Collaborator Successfully")
+        toast.success("Removed Collaborator Successfully")
       }
     } catch (error) {
       console.log("Error ", error.message);
@@ -193,7 +194,7 @@ const CollectionContextProvider = ({ children }) => {
       );
       if (res.data.success) {
         await fetchCollectionByCollaborators();
-        alert("Removed You As Collaborator Successfully")
+        toast.success("Removed You As Collaborator Successfully")
       }
     } catch (error) {
       console.log("Error ", error.message);
