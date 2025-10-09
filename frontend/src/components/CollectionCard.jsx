@@ -1,12 +1,16 @@
 import React, { useContext } from "react";
-import { Folder, Trash } from "lucide-react";
+import { Folder, Trash,X } from "lucide-react";
 
 import { useNavigate } from "react-router";
 import { collectionContext } from "../context/CollectionContext";
 
-const CollectionCard = ({ collection }) => {
-  const {deleteCollection} = useContext(collectionContext)
+const CollectionCard = ({ collection,isOwner }) => {
+  const {deleteCollection,removeYourselfAsCollaborator} = useContext(collectionContext)
   console.log(collection);
+  const handleRemove = async (e) => {
+    e.stopPropagation();
+    await removeYourselfAsCollaborator(collection._id)
+  }
   const handleDelete = async (e) => {
     e.stopPropagation();
     await deleteCollection(collection._id)
@@ -24,12 +28,17 @@ const CollectionCard = ({ collection }) => {
           {/* Brownish folder color */}
           <h2 className="text-lg font-semibold">{collection.name}</h2>
         </div>
-
-        <button
+      {isOwner ? ( <button
           onClick={handleDelete}
         >
-          <Trash className = 'text-2xl'></Trash>
-        </button>
+          <Trash className = 'text-red-600 text-2xl'></Trash>
+        </button>) : (<button
+          onClick={handleRemove}
+        >
+          
+          <X className = 'text-red-600 text-2xl'></X>
+        </button>)}
+       
       </div>
     </div>
   );

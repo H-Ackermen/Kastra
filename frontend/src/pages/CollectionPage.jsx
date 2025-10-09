@@ -9,7 +9,7 @@ import CollaboratorSidebar from "../components/CollaboratorSidebar"
 
 const CollectionPage = () => {
   const { collectionId } = useParams();
-  const { collectionContent, fetchContentofCollection, removeContentFromCollection,fetchCollaborators,collaborators } = useContext(collectionContext);
+  const { collectionContent, fetchContentofCollection, removeContentFromCollection,fetchCollaborators,collaborators,removeCollaborator } = useContext(collectionContext);
   console.log("collection id of this collection",collectionId);
 
   useEffect(() => {
@@ -24,6 +24,9 @@ const CollectionPage = () => {
     await removeContentFromCollection(collectionId, { contentId });
   };
 
+  const handleRemoveCollaborator = async (collaboratorId) => {
+    await removeCollaborator(collectionId,{collaboratorId})
+  }
   return (
     <div className="min-h-screen bg-gray-950 text-gray-100">
       <Navbar />
@@ -64,24 +67,36 @@ const CollectionPage = () => {
         )}
 
         {/* Collaborators */}
-        <div>
-          <h3 className="text-sm text-gray-400 uppercase">Collaborators</h3>
-          {collaborators?.length === 0 ? (
-            <p className="text-gray-500 mt-2 text-sm">No collaborators yet.</p>
-          ) : (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-2">
-              {collaborators?.map((c) => (
-                <div
-                  key={c._id}
-                  className="p-3 bg-gray-800 rounded-md flex justify-between items-center hover:bg-gray-750 transition"
-                >
-                  <span className="font-medium">{c.name}</span>
-                  <span className="text-sm text-gray-400">{c.email}</span>
-                </div>
-              ))}
-            </div>
-          )}
+       <div>
+  <h3 className="text-sm text-gray-400 uppercase">Collaborators</h3>
+
+  {collaborators?.length === 0 ? (
+    <p className="text-gray-500 mt-2 text-sm">No collaborators yet.</p>
+  ) : (
+    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-2">
+      {collaborators?.map((c) => (
+        <div
+          key={c._id}
+          className="p-3 bg-gray-800 rounded-md flex justify-between items-center hover:bg-gray-750 transition group"
+        >
+          <div className="flex flex-col">
+            <span className="font-medium">{c.name}</span>
+            <span className="text-sm text-gray-400">{c.email}</span>
+          </div>
+
+          {/* Delete Collaborator Button */}
+          <button
+            onClick={() => handleRemoveCollaborator(c._id)}
+            className="bg-red-600/90 hover:bg-red-700 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg"
+            title="Remove collaborator"
+          >
+            <Trash2 className="w-4 h-4 text-white" />
+          </button>
         </div>
+      ))}
+    </div>
+  )}
+</div>
       </section>
       {/* Content Grid */}
       <main className="p-6">

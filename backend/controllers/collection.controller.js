@@ -269,19 +269,22 @@ export const removeYourselfAsCollaborator = async (req, res) => {
       res.status(200).json({
         success: true,
         message: "You have been removed as collaborator from the collection",
+        updatedCollaborators:req.collection.collaborators
       });
     }
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: err.message,
+      message: error.message,
     });
   }
 };
 
 export const removeCollaborator = async (req,res) => {
     try {
-        const {collaboratorId} = req.body;
+      console.log(req.body);
+        
+      const {collaboratorId} = req.body;
         
         req.collection.collaborators = req.collection.collaborators.filter(
       (collabId) => collabId.toString() !== collaboratorId
@@ -295,9 +298,11 @@ export const removeCollaborator = async (req,res) => {
       updatedCollaborators: req.collection.collaborators,
     });
     } catch (error) {
+      console.log(error.message);
+      
          res.status(500).json({
       success: false,
-      message: err.message,
+      message: error.message,
     });
     }
 }

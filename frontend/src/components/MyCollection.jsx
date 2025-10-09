@@ -34,7 +34,7 @@ const MyCollection = () => {
           ) : (
             <div className="flex flex-wrap gap-6 justify-center">
               {collections.map((collection) => (
-                <CollectionCard key={collection._id} collection={collection} />
+                <CollectionCard key={collection._id} collection={collection} isOwner={1} />
               ))}
             </div>
           )}
@@ -52,7 +52,7 @@ const MyCollection = () => {
           ) : (
             <div className="flex flex-wrap gap-6 justify-center">
               {collabCollections.map((collection) => (
-                <CollectionCard key={collection._id} collection={collection} />
+                <CollectionCard key={collection._id} collection={collection} isOwner={0} />
               ))}
             </div>
           )}

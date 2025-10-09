@@ -91,7 +91,7 @@ const CollectionContextProvider = ({ children }) => {
         setCollections(res.data.collections);
       }
     } catch (error) {
-      console.log("Error ", res.data.message);
+      console.log("Error ", error.message);
       handleApiError(error);
     }
   };
@@ -146,7 +146,7 @@ const CollectionContextProvider = ({ children }) => {
         setCollaborators(res.data.collaborators);
       }
     } catch (error) {
-      console.log("Error ", res.data.message, error.message);
+      console.log("Error ", error.message);
       handleApiError(error);
     }
   };
@@ -162,15 +162,52 @@ const CollectionContextProvider = ({ children }) => {
         setcollabCollections(res.data.collections);
       }
     } catch (error) {
-      console.log("Error ", res.data.message, error.message);
+      console.log("Error ", error.message);
       handleApiError(error);
     }
   };
+
+  const removeCollaborator = async (collectionId,formData) => {
+     try {
+      console.log("Working")
+      const res = await axios.delete(
+        `${API_URL}/api/collections/${collectionId}/remove-collaborator`,
+        {data:formData, withCredentials: true }
+      );
+      if (res.data.success) {
+        await fetchCollaborators(collectionId)
+        alert("Removed Collaborator Successfully")
+      }
+    } catch (error) {
+      console.log("Error ", error.message);
+      handleApiError(error);
+    }
+  }
+
+  const removeYourselfAsCollaborator = async (collectionId) => {
+     try {
+      console.log("Working")
+      const res = await axios.delete(
+        `${API_URL}/api/collections/${collectionId}/remove-yourself-collaborator`,
+        { withCredentials: true }
+      );
+      if (res.data.success) {
+        await fetchCollectionByCollaborators();
+        alert("Removed You As Collaborator Successfully")
+      }
+    } catch (error) {
+      console.log("Error ", error.message);
+      handleApiError(error);
+    }
+  }
+
   const contextValues = {
     collections,
     collectionContent,
     collabCollections,
     collaborators,
+    removeYourselfAsCollaborator,
+    removeCollaborator,
     addContentToCollection,
     createCollection,
     removeContentFromCollection,
