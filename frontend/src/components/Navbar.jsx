@@ -1,13 +1,15 @@
 import React, { useContext, useState } from "react";
 import { Sparkles, Menu, X, User, LogOut, LayoutDashboard, Settings, Zap } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import { Link } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { authContext } from "../context/AuthContext";
-
+import { useNavigate } from "react-router";
 export default function Navbar() {
   const { user, logout } = useContext(authContext);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const Navigate=useNavigate();
 
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const toggleProfileMenu = () => setProfileMenuOpen(!profileMenuOpen);
@@ -133,9 +135,18 @@ export default function Navbar() {
                           <Settings className="w-4 h-4" />
                           Edit Profile
                         </Link>
+                         <Link
+                          to="/user-insights"
+                          className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors modern-subtitle"
+                          onClick={() => setProfileMenuOpen(false)}
+                        >
+                          <TrendingUp className="w-4 h-4" />
+                          Insights
+                        </Link>
                         <button
                           onClick={() => {
                             logout();
+                            Navigate('/')
                             setProfileMenuOpen(false);
                           }}
                           className="flex items-center gap-3 w-full px-4 py-2 text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors modern-subtitle"

@@ -9,6 +9,7 @@ import { createBrowserRouter,RouterProvider } from 'react-router'
 import ExplorePage from './pages/Explore'
 import About from './pages/About'
 import EditProfile from './pages/EditProfile'
+import InsightPage from './pages/InsightPage'
 
 function App() {
   const router = createBrowserRouter([
@@ -47,6 +48,10 @@ function App() {
     {
       path:'/edit-profile',
        element:<EditProfile/>
+    },
+     {
+      path:'/user-insights',
+       element:<InsightPage/>
     }
   ])
   return (

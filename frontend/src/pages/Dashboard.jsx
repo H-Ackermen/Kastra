@@ -71,7 +71,7 @@ export default function KastraDashboard() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
       >
-        <ContentInsights userId={user?._id} />
+   
       </motion.div>
 
       {/* Navigation and Content */}
