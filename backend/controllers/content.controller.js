@@ -2,6 +2,8 @@ import Content from "../models/content.model.js";
 import User from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/content.utils.js";
 import { addToCategory } from "../utils/category.utils.js";
+import  {updateDailyEngagement}  from "../utils/engagement.util.js"
+
 export const uploadAndCreateContent = async (req, res) => {
   console.log("Running uploadAndCreateContents");
 
@@ -108,6 +110,7 @@ export const fetchContentById = async (req, res) => {
         message: "Content not found",
       });
     }
+     await updateDailyEngagement(id, { views: 1 });
     return res.status(200).json({
       success: true,
       message: "Content fetched successfully",

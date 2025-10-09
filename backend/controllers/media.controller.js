@@ -1,4 +1,5 @@
 import Content from "../models/content.model.js";
+import  {updateDailyEngagement}  from "../utils/engagement.util.js"
 
 export const updateLikeCnt = async (req, res) => {
   try {
@@ -23,7 +24,12 @@ export const updateLikeCnt = async (req, res) => {
       updated.likecnt = 0;
       await updated.save();
     }
-
+    const delta = alreadyLiked ? -1 : 1;
+       try {
+      await updateDailyEngagement(contentId, { like: delta });
+    } catch (err) {
+      console.error("Failed to update engagementHistory for save:", err);
+    }
     return res.status(200).json({
       success: true,
       data: {
@@ -54,6 +60,7 @@ export const savedContent = async (req, res) => {
     const userIdStr = user._id.toString();
 const alreadySaved = content.savedBy.some((id) => id.toString() === userIdStr);
 
+
     // Toggle save/unsave on content document
     const update = alreadySaved
       ? { $pull: { savedBy: userId } }
@@ -70,6 +77,12 @@ const alreadySaved = content.savedBy.some((id) => id.toString() === userIdStr);
       user.savedContents.push(contentId);
     }
     await user.save();
+    const delta = alreadySaved ? -1 : 1;
+       try {
+      await updateDailyEngagement(contentId, { saves: delta });
+    } catch (err) {
+      console.error("Failed to update engagementHistory for save:", err);
+    }
 
     return res.status(200).json({
       success: true,

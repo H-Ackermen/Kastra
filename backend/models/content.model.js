@@ -1,4 +1,11 @@
 import mongoose from "mongoose";
+
+const engagementSchema = new mongoose.Schema({
+  date: { type: Date, required: true },
+  views: { type: Number, default: 0 },
+  likes: { type: Number, default: 0 },
+  saves: { type: Number, default: 0 },
+});
 const contentSchema=new mongoose.Schema
 (
    {
@@ -9,8 +16,9 @@ const contentSchema=new mongoose.Schema
     contentType:{type:String,enum:['video','article','image']},
     url:{type:String,required:false},
     likedBy:[{type:mongoose.Schema.Types.ObjectId,ref:'User',default:[]}],
-    savedBy:[{type:mongoose.Schema.Types.ObjectId,ref:'User',default:[]}]
-
+    savedBy:[{type:mongoose.Schema.Types.ObjectId,ref:'User',default:[]}],
+   engagementHistory: [engagementSchema],
+   views:{type:Number,default:0}
    } 
 )
 const Content=mongoose.model('Content',contentSchema);

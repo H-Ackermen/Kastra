@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Sparkles,
   Upload,
@@ -28,9 +28,12 @@ import MyContent from "../components/MyContent";
 import MyCollection from "../components/MyCollection";
 import MySaved from "../components/MySaved";
 import SearchBar from "../components/SearchBar";
+import ContentInsights from "../components/ContentInsight";
+import { authContext } from "../context/AuthContext";
 
 export default function KastraDashboard() {
   const [activebtn, setActivebtn] = useState("mycontent");
+  const { user } = useContext(authContext);
 
   const stats = [
     { label: "Total Works", value: "24", icon: <Image className="w-5 h-5" /> },
@@ -44,7 +47,7 @@ export default function KastraDashboard() {
       {/* Top Navigation */}
       <Navbar />
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 mt-8">
+      {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 mt-8">
         {stats.map((stat, i) => (
           <div
             key={i}
@@ -57,7 +60,9 @@ export default function KastraDashboard() {
             <p className="text-2xl font-bold">{stat.value}</p>
           </div>
         ))}
-      </div>
+      </div> */}
+
+      <ContentInsights userId={user?._id} />
       <div>
         <NavigationMenu activebtn={activebtn} setActivebtn={setActivebtn} />
         <div>

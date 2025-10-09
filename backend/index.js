@@ -21,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use((req, res, next) => {
   console.log("Incoming:", req.method, req.url);
+  console.log("Headers:", req.headers);
   next();
 });
 
@@ -32,6 +33,8 @@ import mediaRoutes from './routes/media.routes.js'
 import searchRoutes from './routes/search.routes.js'
 import contentRoutes from './routes/content.route.js'
 import commentRoutes from './routes/comment.routes.js'
+import insightRoutes from './routes/insight.routes.js'
+
 
 // api endpoints
 app.use("/api/auth", authRoutes);
@@ -40,6 +43,7 @@ app.use("/api/media",mediaRoutes);
 app.use("/api/collections",collectionRouter)
 app.use("/api/search",searchRoutes);
 app.use("/api/comments" , commentRoutes);
+app.use("/api/analytics", insightRoutes);
 // Start Server
 const startServer = async () => {
   try {
