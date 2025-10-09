@@ -5,6 +5,7 @@ import { addToCategory } from "../utils/category.utils.js";
 import  {updateDailyEngagement}  from "../utils/engagement.util.js"
 
 export const uploadAndCreateContent = async (req, res) => {
+  try {
   console.log("Running uploadAndCreateContents");
 
   const file = req.file;
@@ -12,13 +13,9 @@ export const uploadAndCreateContent = async (req, res) => {
   const { title, description, category } = req.body;
 
   const owner = req.user._id;
+if(file){
 
-  if (!file) {
-    return res.status(400).json({
-      success: false,
-      message: "No file uploaded",
-    });
-  }
+  
   if (file.mimetype.startsWith("image/") && file.size > 10 * 1024 * 1024) {
     return res.status(400).json({
       success: false,
@@ -37,7 +34,7 @@ export const uploadAndCreateContent = async (req, res) => {
       message: "Title and description are required",
     });
   }
-
+  
   // Upload to Cloudinary
   const result = await uploadOnCloudinary(file.path);
   if (!result) {
@@ -46,17 +43,20 @@ export const uploadAndCreateContent = async (req, res) => {
       message: "Failed to upload file to Cloudinary",
     });
   }
-
+  
+}
   // Save content in DB
-  try {
-    const newContent = new Content({
-      owner,
-      title,
-      description,
-      url: result.secure_url,
-      // saare types ke liye
-      contentType: result.resource_type,
-    });
+  
+  const newContent = new Content({
+    owner,
+    title,
+    description,
+    url: file ? result.secure_url : null,
+    // saare types ke liye
+    contentType: file ? result.resource_type : 'article',
+  });
+  
+
     await newContent.save();
     await addToCategory(newContent._id, category);
     return res.status(201).json({
@@ -71,6 +71,7 @@ export const uploadAndCreateContent = async (req, res) => {
       message: "Error occurred while creating content",
     });
   }
+
 };
 // fetch all contents by a user
 
