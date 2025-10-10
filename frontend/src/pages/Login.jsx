@@ -124,13 +124,13 @@ export default function Login() {
                 >
                   <div className="flex items-center">
                     <Label htmlFor="password" className="modern-subtitle text-gray-700">Password</Label>
-                    <motion.a
+                    <Link to='/forgot-password'
                       whileHover={{ scale: 1.05 }}
-                      href="#"
+                    
                       className="ml-auto inline-block text-sm text-indigo-600 hover:text-indigo-700 modern-subtitle underline-offset-4 hover:underline"
                     >
                       Forgot password?
-                    </motion.a>
+                    </Link>
                   </div>
                   <div className="relative">
                     <Input 
@@ -181,11 +181,11 @@ export default function Login() {
               transition={{ delay: 0.8 }}
               className="w-full"
             >
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Button variant="outline" className="w-full modern-card border border-gray-200 text-gray-700 hover:text-indigo-600 modern-subtitle">
-                  Continue with Google
-                </Button>
-              </motion.div>
+              {/* <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Link variant="outline" className="w-full modern-card border border-gray-200 text-gray-700 hover:text-indigo-600 modern-subtitle" to='/forgot-password'>
+                  Forgot Password
+                </Link>
+              </motion.div> */}
             </motion.div>
             <motion.div
               initial={{ opacity: 0 }}

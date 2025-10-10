@@ -26,7 +26,7 @@ export const updateLikeCnt = async (req, res) => {
     }
     const delta = alreadyLiked ? -1 : 1;
        try {
-      await updateDailyEngagement(contentId, { like: delta });
+      await updateDailyEngagement(contentId, { likes: delta });
     } catch (err) {
       console.error("Failed to update engagementHistory for save:", err);
     }
