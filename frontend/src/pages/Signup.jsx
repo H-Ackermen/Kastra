@@ -20,8 +20,9 @@ import { errorContext } from "../context/ErrorContext";
 
 export default function Signup() {
   const navigate = useNavigate();
-  const { register } = useContext(authContext);
+  const { register,token } = useContext(authContext);
   const { error, validationErrors, setValidationErrors } =  useContext(errorContext);
+  if(token) navigate('/')
   const [formData, setFormData] = useState({
     name: "",
     username: "",

@@ -5,9 +5,14 @@ import { EditProfileContext } from "../context/EditProfileContext";
 import Navbar from "../components/Navbar";
 import { User, Mail, Camera, Save } from "lucide-react";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 
 export default function EditProfile() {
-  const { user } = useContext(authContext);
+  const { user,token } = useContext(authContext);
+  console.log(token)
+  const navigate = useNavigate()
+  useEffect(() => {if(!token) navigate('/')},[token])
+  
   const { editProfile, loading, error, success } = useContext(EditProfileContext);
 
   const [name, setName] = useState("");

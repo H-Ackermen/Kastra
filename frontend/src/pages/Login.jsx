@@ -20,11 +20,11 @@ import { errorContext } from "../context/ErrorContext";
 
 export default function Login() {
   const navigate = useNavigate()
-  const {login} = useContext(authContext)
+  const {login,token} = useContext(authContext)
   const {error,validationErrors} = useContext(errorContext)
   const [formData,setFormData] = useState({credential:'',password:''})
   const [showPassword, setShowPassword] = useState(false)
-
+  if(token) navigate('/')
   const handleSubmit = async (e)=>{
     e.preventDefault()
     try {

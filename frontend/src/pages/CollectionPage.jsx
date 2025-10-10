@@ -1,13 +1,20 @@
 import React, { useContext, useEffect } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { collectionContext } from "../context/CollectionContext";
 import ContentCard from "../components/ContentCard";
 import Navbar from "../components/Navbar";
 import { Trash2,Users } from "lucide-react";
 
 import CollaboratorSidebar from "../components/CollaboratorSidebar"
+import { authContext } from "@/context/AuthContext";
 
 const CollectionPage = () => {
+  const {token} = useContext(authContext)
+  const navigate = useNavigate()
+  useEffect(()=>{
+    if(!token) navigate('/')
+
+  },[token])
   const { collectionId } = useParams();
   const { collectionContent, fetchContentofCollection, removeContentFromCollection,fetchCollaborators,collaborators,removeCollaborator } = useContext(collectionContext);
   console.log("collection id of this collection",collectionId);

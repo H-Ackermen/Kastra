@@ -3,8 +3,11 @@ import Navbar from '../components/Navbar'
 import { useContext } from 'react';
 import ContentInsights from '../components/ContentInsight'
 import { authContext } from "../context/AuthContext";
+import { useNavigate } from 'react-router';
 const InsightPage = () => {
-  const { user } = useContext(authContext);
+  const { user,token } = useContext(authContext);
+  const navigate = useNavigate()
+  if(!token) navigate('/')
   return (
     <div>
         <Navbar/>

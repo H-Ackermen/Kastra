@@ -34,8 +34,7 @@ const ResetPassword = () => {
     }
     try {
       const valid = await verifyJWT(resetToken);
-      // setValid(valid);
-      if (!valid) navigate('/'); // redirect if token invalid
+      if (!valid) navigate('/');
     } catch (err) {
       console.error(err);
       navigate('/');

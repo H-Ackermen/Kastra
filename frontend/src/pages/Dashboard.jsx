@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   Sparkles,
   Upload,
@@ -30,14 +30,19 @@ import NavigationMenu from "../components/NavigationMenu";
 import MyContent from "../components/MyContent";
 import MyCollection from "../components/MyCollection";
 import MySaved from "../components/MySaved";
-import SearchBar from "../components/SearchBar";
-import ContentInsights from "../components/ContentInsight";
+
+
 import { authContext } from "../context/AuthContext";
+import { useNavigate } from "react-router";
 
 export default function KastraDashboard() {
   const [activebtn, setActivebtn] = useState("mycontent");
-  const { user } = useContext(authContext);
+  const { user,token } = useContext(authContext);
+  const navigate = useNavigate()
+  useEffect(()=>{
+    if(!token) navigate('/')
 
+  },[token])
   const stats = [
     { label: "Total Works", value: "24", icon: <Image className="w-5 h-5" /> },
     { label: "Collections", value: "8", icon: <Grid3x3 className="w-5 h-5" /> },

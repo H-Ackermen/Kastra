@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { motion } from "framer-motion";
 import {
   Card,
@@ -18,8 +18,15 @@ import { Alert, AlertDescription } from "@/components/ui/alert.jsx";
 import { AlertCircle, Sparkles, Eye, EyeOff, User, Mail, Lock } from "lucide-react";
 import { useState } from 'react';
 import { authContext } from '../context/AuthContext';
+import { useNavigate } from 'react-router';
 
 const ForgotPassword = () => {
+  const {token} = useContext(authContext)
+  const navigate = useNavigate()
+  useEffect(()=>{
+
+    if(token) navigate('/')
+  },[token])
   const [email,setEmail] = useState("")
   const {forgotPassword} = useContext(authContext)
   const handleChange = (e) =>{
