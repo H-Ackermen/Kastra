@@ -380,36 +380,46 @@ export default function ContentPage() {
           </div>
 
           {/* RIGHT SIDE: Recommended videos */}
-          <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="w-full lg:w-96"
-          >
-            <div className="modern-card rounded-xl p-6 shadow-lg">
-              <h3 className="text-xl font-semibold modern-title text-gray-900 mb-4 flex items-center gap-2">
-                <Eye className="w-5 h-5 text-indigo-600" />
-                More to Explore
-              </h3>
-              <div className="flex flex-col gap-4 overflow-y-auto max-h-[calc(100vh-200px)] pr-2">
-                {(contents || [])
-                  .filter((c) => c?._id !== content?._id)
-                  .slice(0, 20)
-                  .map((c, index) => (
-                    <motion.div
-                      key={c._id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: index * 0.05 }}
-                      whileHover={{ scale: 1.02 }}
-                      className="w-full overflow-hidden rounded-lg"
-                    >
-                      <ContentCard post={c} />
-                    </motion.div>
-                  ))}
-              </div>
-            </div>
-          </motion.div>
+          <motion.div
+  initial={{ opacity: 0, x: 20 }}
+  animate={{ opacity: 1, x: 0 }}
+  transition={{ duration: 0.6, delay: 0.6 }}
+  className="w-full lg:w-96 lg:sticky lg:top-20 self-start"
+>
+  <div className="modern-card rounded-xl p-6 shadow-lg h-[calc(100vh-120px)] flex flex-col">
+    <h3 className="text-xl font-semibold modern-title text-gray-900 mb-4 flex items-center gap-2">
+      <Eye className="w-5 h-5 text-indigo-600" />
+      More to Explore
+    </h3>
+
+    <div
+  className="flex flex-col items-center gap-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 hover:scrollbar-thumb-gray-500 pr-2"
+  style={{
+    scrollbarWidth: "thin",
+    scrollbarColor: "#a0aec0 #edf2f7",
+  }}
+>
+  {(contents || [])
+    .filter((c) => c?._id !== content?._id)
+    .slice(0, 20)
+    .map((c, index) => (
+      <motion.div
+        key={c._id}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: index * 0.05 }}
+        whileHover={{ scale: 1.02 }}
+        className="w-full flex justify-center"
+      >
+        <div className="w-full max-w-[360px]">
+          <ContentCard post={c} />
+        </div>
+      </motion.div>
+    ))}
+</div>
+
+  </div>
+</motion.div>
         </div>
       </div>
     </div>
