@@ -49,14 +49,14 @@ export const registerUser = async (req, res) => {
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: false,
     });
 
     return res.status(201).json({
       success: true,
       message: "User Registered Successfully",
       user: userWithoutPassword,
-      accessToken,
+      token:accessToken,
     });
   } catch (err) {
     if (err.name === "ValidationError") {
