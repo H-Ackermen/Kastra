@@ -1,4 +1,4 @@
-import React, { useContext,useState } from 'react'
+import React, { useContext,useEffect,useState } from 'react'
 import { motion } from "framer-motion";
 import {
   Card,
@@ -15,23 +15,42 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert.jsx";
 import { useNavigate, useSearchParams } from 'react-router';
 
-import { AlertCircle, Sparkles, Eye, EyeOff, User, Mail, Lock } from "lucide-react";
+import { AlertCircle, Sparkles, Eye, EyeOff, Lock } from "lucide-react";
 import { authContext } from '../context/AuthContext';
 import { errorContext } from '../context/ErrorContext';
 const ResetPassword = () => {
+  // const [isValid,setValid] = useState(true)
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
    const resetToken = searchParams.get("token");
-  if(!resetToken) navigate('/')
-  const {resetPassword} = useContext(authContext)
-  const { error, validationErrors, setValidationErrors } =  useContext(errorContext);
 
+  const {resetPassword,verifyJWT} = useContext(authContext)
+  const { error, validationErrors, setValidationErrors } =  useContext(errorContext);
+  useEffect(() => {
+  const validateToken = async () => {
+    if (!resetToken) {
+      navigate('/');
+      return;
+    }
+    try {
+      const valid = await verifyJWT(resetToken);
+      // setValid(valid);
+      if (!valid) navigate('/'); // redirect if token invalid
+    } catch (err) {
+      console.error(err);
+      navigate('/');
+    }
+  };
+  validateToken();
+}, [resetToken, navigate, verifyJWT]);
   const [formData,setFormData] = useState({
     password:"",
     confirmPassword:""
   })
   const [showPassword,setShowPassword] = useState("")
   const [showConfirmPassword,setShowConfirmPassword] = useState("")
+
+  
 
    const renderFieldError = (field) => {
     if (validationErrors[field]) {

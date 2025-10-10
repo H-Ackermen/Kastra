@@ -128,6 +128,17 @@ const AuthContextProvider = ({ children }) => {
     }
   }
 
+  const verifyJWT = async(resetToken) => {
+    try {
+      const res = await axios.get(`${API_URL}/api/auth/verify-token`,{params: { token: resetToken }})
+      console.log(res.data.valid)
+      return res.data.valid
+    } catch (error) {
+      
+      return false;
+    }
+  }
+
   // On mount, if token exists, fetch user
   useEffect(() => {
     if (token && !user) {
@@ -152,7 +163,8 @@ const AuthContextProvider = ({ children }) => {
     logout,
     getCurrentUser,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    verifyJWT
   };
 
   return (

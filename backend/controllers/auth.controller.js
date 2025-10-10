@@ -241,3 +241,15 @@ export const resetPassword = async (req, res) => {
     return res.status(500).json({ success: false, message: "Invalid or expired token" });
   }
 };
+
+export const validateResetToken = (req, res) => {
+  console.log("Hello")
+  const { token } = req.query;
+  console.log(token)
+  try {
+    jwt.verify(token, process.env.ACCESS_SECRET_KEY);
+    return res.status(200).json({ valid: true });
+  } catch(err) {
+    return res.status(400).json({ valid: false, message: "Token expired" });
+  }
+}

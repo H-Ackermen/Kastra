@@ -1,6 +1,6 @@
 import Follow from "../models/follow.model.js";
 import User from "../models/user.model.js";
-import { cloudinary } from "../config/connectCloudinary.js";
+import { v2 as cloudinary } from "cloudinary";
 import { uploadOnCloudinary } from "../utils/content.utils.js";
 
 export const followUser = async (req,res) => {

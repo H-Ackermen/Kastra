@@ -1,8 +1,7 @@
 import { Router } from "express";
 
 import { verifyUserJWT } from "../middlewares/jwt.middleware.js";
-import { followUser, unfollowUser,fetchFollowing, fetchFollowers } from "../controllers/user.controller.js";
-import { editProfile } from "../controllers/editProfile.controller.js";
+import { followUser, unfollowUser,fetchFollowing, fetchFollowers,editProfile } from "../controllers/user.controller.js";
 const userRoutes = Router()
 
 userRoutes.route("/follow-user").post(verifyUserJWT, followUser)
