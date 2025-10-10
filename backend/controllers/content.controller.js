@@ -3,6 +3,7 @@ import User from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/content.utils.js";
 import { addToCategory } from "../utils/category.utils.js";
 import { updateDailyEngagement } from "../utils/engagement.util.js"
+import { v2 as cloudinary } from "cloudinary";
 
 export const uploadAndCreateContent = async (req, res) => {
   try {
@@ -52,6 +53,7 @@ export const uploadAndCreateContent = async (req, res) => {
       title,
       description,
       url: file ? result.secure_url : null,
+      publicId : file ? result.public_id : null,
       // saare types ke liye
       contentType: file ? result.resource_type : 'article',
     });
@@ -147,13 +149,25 @@ export const fetchAllContents = async (req, res) => {
 
 export const deleteContent = async (req, res) => {
   try {
-    const deletedContent = await Content.findByIdAndDelete(req.params.id);
-    if (!deletedContent) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Content not found" });
+    const content = await Content.findById(req.params.id);
+
+    if (!content) {
+      return res.status(404).json({ success: false, message: "Content not found" });
     }
-    res.json({ success: true, message: "Content deleted successfully" });
+
+    // Delete from Cloudinary only if it exists
+    if (content.publicId) {
+      await cloudinary.uploader.destroy(content.publicId, {
+        resource_type: content.contentType || "image", // optional but safe
+      });
+    }
+
+    await content.deleteOne();
+
+    return res.status(200).json({
+      success: true,
+      message: "Content deleted successfully",
+    });
   } catch (err) {
     res
       .status(500)

@@ -1,9 +1,11 @@
 import Follow from "../models/follow.model.js";
+import User from "../models/user.model.js";
+import { cloudinary } from "../config/connectCloudinary.js";
+import { uploadOnCloudinary } from "../utils/content.utils.js";
 
-
-export const followUser = async (req, res) => {
-  try {
-    const followerId = req.user._id;
+export const followUser = async (req,res) => {
+    try {
+         const followerId = req.user._id;
     const followingId = req.params.id;
 
     if (followerId.equals(followingId)) {
@@ -93,21 +95,91 @@ export const fetchFollowing = async (req, res) => {
   }
 };
 
-export const fetchFollowers = async (req, res) => {
-  try {
-    const followerList = await Follow.find({
-      following: req.user._id,
-    }).populate("follower", "name email");
+export const fetchFollowers = async (req,res) => {
+    try {
+        const followerList = await Follow.find({following:req.user._id}).populate("follower", "name email")
+        
+        const followers = followerList.map((entry) => entry.whom);
+        return res.status(200).json({
+        success: true,
+        followers,
+        });
+    } catch (error) {
+        console.error("Error in FetchFollowing Controller",error);
+        return res.status(500).json({success:false,message:error.message}) 
+    }
+}
+export const editProfile = async (req , res)=>{
+    try {
+          const user = req.user;
+          const {name , email , username } = req.body;
+          const profilePicture = req.file;
+          let result = null;
+          if (email && email !== user.email) {
+          const checkEmail = await User.findOne({ email });
+          if (checkEmail && checkEmail._id.toString() !== user._id.toString()) {
+            return res.status(400).json({
+              success: false,
+              message: "Email Already Exists"
+            });
+          }
+        }
+        if (username && username !== user.username) {
+          const checkUsername = await User.findOne({ username });
+          if (checkUsername && checkUsername._id.toString() !== user._id.toString()) {
+            return res.status(400).json({
+              success: false,
+              message: "Username Already Exists"
+            });
+          }
+        }
+        if(profilePicture){
+          if(user.publicId){
+            try {
+              await cloudinary.uploader.destroy(user.publicId);
+            } catch (err) {
+              console.error("Error deleting old profile photo from Cloudinary:", err);
+            }
+          }
+          user.name = name || user.name;
+          user.email = email || user.email;
+          user.username = username || user.username;
+          //upload on cloudinary 
+          result = await uploadOnCloudinary(profilePicture.path);
+          
+          if (!result) {
+            return res.status(500).json({
+              success: false,
+              message: "Failed to upload profilePhoto on Cloudinary",
+            });
+          }
+          user.profilePicture = result.secure_url;
+          user.publicId = result.public_id;
+          await user.save();
 
-    const followers = followerList.map((entry) => entry.whom);
-    return res.status(200).json({
-      success: true,
-      followers,
-    });
-  } catch (error) {
-    console.error("Error in FetchFollowing Controller", error);
-    return res.status(500).json({ success: false, message: error.message });
-  }
+          return res.status(200).json({
+              success : true,
+              message : "Profile Updated Successfully ;)",
+              user 
+          })
+        }
+        else{
+            user.name = name || user.name;
+            user.email = email || user.email;
+            user.username = username || user.username;
+            await user.save();
+            return res.status(200).json({
+                success : true,
+                message : "Profile Updated Successfully ;)",
+                user 
+            })
+        }
+    }   
+    catch (error) {
+        console.error("Error updating profile:", error);
+        res.status(500).json({
+             message: "Server error" ,
+             success : false
+        });
+    }
 };
-
-
