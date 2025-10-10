@@ -1,86 +1,62 @@
-import React, { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import axios from "axios";
 import { authContext } from "../context/AuthContext";
+import { EditProfileContext } from "../context/EditProfileContext";
 import Navbar from "../components/Navbar";
 import { User, Mail, Camera, Save } from "lucide-react";
+import { toast } from "react-toastify";
 
 export default function EditProfile() {
-  const { user, token, setUser } = useContext(authContext);
-  const API_URL = import.meta.env.VITE_BACKEND_URL;
+  const { user } = useContext(authContext);
+  const { editProfile, loading, error, success } = useContext(EditProfileContext);
 
-  const [formData, setFormData] = useState({
-    name: "",
-    username: "",
-    email: "",
-    profilePicture: "",
-  });
+  const [name, setName] = useState("");
+  const [username, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [profileFile, setProfileFile] = useState(null); // new file
+  const [profileURL, setProfileURL] = useState(""); // preview URL
 
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
-
-  // Load user info on mount
+  // initialize form
   useEffect(() => {
     if (user) {
-      setFormData({
-        name: user.name || "",
-        username: user.username || "",
-        email: user.email || "",
-        profilePicture: user.profilePicture || "",
-      });
+      setName(user.name || "");
+      setUserName(user.username || "");
+      setEmail(user.email || "");
+      setProfileURL(user.profilePicture || "");
     }
   }, [user]);
 
-  // Handle input changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  // show toast notifications
+  useEffect(() => {
+    if (success) toast.success(success);
+    if (error) toast.error(error);
+  }, [success, error]);
 
-  // Handle profile picture upload (base64)
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setFormData((prev) => ({ ...prev, profilePicture: reader.result }));
-    };
-    reader.readAsDataURL(file);
-  };
-
-  // Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage("");
 
-    try {
-      const res = await axios.put(
-        `${API_URL}/api/users/update-profile`,
-        { ...formData },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      if (res.data?.success) {
-        setUser(res.data.user);
-        setMessage("Profile updated successfully 🎉");
-      } else {
-        setMessage("Failed to update profile. Try again!");
-      }
-    } catch (err) {
-      console.error(err);
-      setMessage("Error updating profile.");
-    } finally {
-      setLoading(false);
+    if (!name || !username || !email) {
+      toast.error("Please fill in all fields");
+      return;
     }
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("username", username);
+    formData.append("email", email);
+
+    // append file only if user selects new file
+    if (profileFile) {
+      formData.append("profilePicture", profileFile);
+    }
+    console.log(formData)
+    await editProfile(formData);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 text-gray-900 modern-pattern">
       <Navbar />
-
       <div className="container mx-auto px-4 sm:px-6 py-8">
-        {/* Title */}
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -90,7 +66,6 @@ export default function EditProfile() {
           Edit <span className="text-indigo-600">Profile</span>
         </motion.h1>
 
-        {/* Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -101,7 +76,7 @@ export default function EditProfile() {
           <div className="flex flex-col items-center mb-8">
             <div className="relative">
               <img
-                src={formData.profilePicture}
+                src={profileFile ? URL.createObjectURL(profileFile) : profileURL || "/default-avatar.png"}
                 alt="Profile"
                 className="w-28 h-28 rounded-full object-cover border-4 border-indigo-200 shadow-md"
               />
@@ -116,14 +91,19 @@ export default function EditProfile() {
                 id="profilePic"
                 accept="image/*"
                 className="hidden"
-                onChange={handleFileChange}
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    setProfileFile(file);
+                    setProfileURL(URL.createObjectURL(file));
+                  }
+                }}
               />
             </div>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Name */}
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
                 <User className="w-4 h-4 text-indigo-600" /> Name
@@ -131,14 +111,13 @@ export default function EditProfile() {
               <input
                 type="text"
                 name="name"
-                value={formData.name}
-                onChange={handleChange}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none modern-subtitle"
                 placeholder="Enter your full name"
               />
             </div>
 
-            {/* Username */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Username
@@ -146,14 +125,13 @@ export default function EditProfile() {
               <input
                 type="text"
                 name="username"
-                value={formData.username}
-                onChange={handleChange}
+                value={username}
+                onChange={(e) => setUserName(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none modern-subtitle"
                 placeholder="Choose a unique username"
               />
             </div>
 
-            {/* Email */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
                 <Mail className="w-4 h-4 text-indigo-600" /> Email
@@ -161,14 +139,13 @@ export default function EditProfile() {
               <input
                 type="email"
                 name="email"
-                value={formData.email}
-                onChange={handleChange}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none modern-subtitle"
                 placeholder="Enter your email address"
               />
             </div>
 
-            {/* Submit Button */}
             <motion.button
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
@@ -180,21 +157,6 @@ export default function EditProfile() {
               {loading ? "Saving..." : "Save Changes"}
             </motion.button>
           </form>
-
-          {/* Message */}
-          {message && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className={`text-center mt-6 font-medium ${
-                message.includes("success")
-                  ? "text-green-600"
-                  : "text-red-600"
-              }`}
-            >
-              {message}
-            </motion.p>
-          )}
         </motion.div>
       </div>
     </div>

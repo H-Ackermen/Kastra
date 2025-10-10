@@ -112,6 +112,7 @@ export const fetchFollowers = async (req,res) => {
 export const editProfile = async (req , res)=>{
     try {
           const user = req.user;
+          console.log("-------------------------",req.body,req.file)
           const {name , email , username } = req.body;
           const profilePicture = req.file;
           let result = null;
@@ -171,7 +172,7 @@ export const editProfile = async (req , res)=>{
             return res.status(200).json({
                 success : true,
                 message : "Profile Updated Successfully ;)",
-                user 
+                user  
             })
         }
     }   

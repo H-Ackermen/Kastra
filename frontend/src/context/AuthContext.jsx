@@ -146,12 +146,7 @@ const AuthContextProvider = ({ children }) => {
     }
   }, [token]);
 
-  // When token changes (after login/register), fetch user
-  useEffect(() => {
-    if (token && !user) {
-      getCurrentUser();
-    }
-  }, [token]);
+  
 
   const contextValues = {
     user,

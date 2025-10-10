@@ -10,7 +10,7 @@ import { CommentProvider } from "./context/CommentContext.jsx";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import FollowContextProvider from "./context/FollowContext.jsx";
-
+import EditProfileContextProvider from "./context/EditProfileContext";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ErrorContextProvider>
@@ -19,6 +19,7 @@ createRoot(document.getElementById("root")).render(
         <ContentContextProvider>
           <CollectionContextProvider>   
           <CommentProvider>
+            <EditProfileContextProvider>
             <App />
             <ToastContainer
               position="top-right"
@@ -32,6 +33,7 @@ createRoot(document.getElementById("root")).render(
               pauseOnHover
               theme="light"
             />
+            </EditProfileContextProvider>
             </CommentProvider>     
           </CollectionContextProvider>
         </ContentContextProvider>
