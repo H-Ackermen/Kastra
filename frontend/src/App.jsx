@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useContext} from 'react'
 import KastraLanding from './pages/KastraLanding'
 import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
@@ -11,6 +11,7 @@ import About from './pages/About'
 import EditProfile from './pages/EditProfile'
 import InsightPage from './pages/InsightPage'
 import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
 
 function App() {
   const router = createBrowserRouter([
@@ -57,6 +58,10 @@ function App() {
     {
       path:'/forgot-password',
        element:<ForgotPassword/>
+    },
+    {
+       path:`/reset-password`,
+       element:<ResetPassword />
     }
   ])
   return (

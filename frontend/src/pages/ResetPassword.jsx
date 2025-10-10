@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext,useState } from 'react'
 import { motion } from "framer-motion";
 import {
   Card,
@@ -11,8 +11,62 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Sparkles } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert.jsx";
+import { useNavigate, useSearchParams } from 'react-router';
+
+import { AlertCircle, Sparkles, Eye, EyeOff, User, Mail, Lock } from "lucide-react";
+import { authContext } from '../context/AuthContext';
+import { errorContext } from '../context/ErrorContext';
 const ResetPassword = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+   const resetToken = searchParams.get("token");
+  if(!resetToken) navigate('/')
+  const {resetPassword} = useContext(authContext)
+  const { error, validationErrors, setValidationErrors } =  useContext(errorContext);
+
+  const [formData,setFormData] = useState({
+    password:"",
+    confirmPassword:""
+  })
+  const [showPassword,setShowPassword] = useState("")
+  const [showConfirmPassword,setShowConfirmPassword] = useState("")
+
+   const renderFieldError = (field) => {
+    if (validationErrors[field]) {
+      console.log(validationErrors[field]);
+      return (
+        <p className="text-sm text-red-500 mt-1">{validationErrors[field]}</p>
+      );
+    }
+    return null;
+  };
+
+  const handleChange = (e) => {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (validationErrors?.confirmPassword) {
+    setValidationErrors({ ...validationErrors, confirmPassword: null });
+  }
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (formData.password !== formData.confirmPassword) {
+        setValidationErrors({
+          ...validationErrors,
+          confirmPassword: "Passwords do not match",
+        });
+        return; // stop submission
+      }
+      const success = await resetPassword(formData,resetToken);
+      console.log(success)
+      if (success) navigate("/login");
+    } catch (err) {
+      console.log(err);
+    }
+  }
   return (
     <div>
           <div className="min-h-screen flex w-full justify-center items-center bg-gradient-to-br from-slate-50 via-white to-blue-50 modern-pattern py-8">
@@ -22,6 +76,7 @@ const ResetPassword = () => {
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="w-full max-w-md"
       >
+         <form onSubmit={handleSubmit}>
         <Card className="modern-card border border-gray-200 shadow-xl">
           <CardHeader className="text-center">
             <motion.div
@@ -40,14 +95,14 @@ const ResetPassword = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
             >
-              <CardTitle className="text-2xl modern-title text-gray-900">Create Account</CardTitle>
+              <CardTitle className="text-2xl modern-title text-gray-900">Reset Your Password</CardTitle>
               <CardDescription className="text-gray-600 modern-subtitle mt-2">
-                Reset Your Password
+                Create Your New Password
               </CardDescription>
             </motion.div>
           </CardHeader>
           <CardContent>
-            <form>
+           
               <div className="flex flex-col gap-4">
                 {error && (
                   <motion.div
@@ -61,75 +116,6 @@ const ResetPassword = () => {
                     </Alert>
                   </motion.div>
                 )}
-                
-                {/* <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.5 }}
-                  className="grid gap-2"
-                >
-                  <Label htmlFor="username" className="modern-subtitle text-gray-700 flex items-center gap-2">
-                    <User className="w-4 h-4" />
-                    Username
-                  </Label>
-                  <Input
-                    id="username"
-                    type="text"
-                    placeholder="Choose a unique username"
-                    value={formData.username}
-                    required
-                    name="username"
-                    onChange={handleChange}
-                    className="modern-input"
-                  />
-                  {renderFieldError('username')}
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.6 }}
-                  className="grid gap-2"
-                >
-                  <Label htmlFor="fullname" className="modern-subtitle text-gray-700 flex items-center gap-2">
-                    <User className="w-4 h-4" />
-                    Full Name
-                  </Label>
-                  <Input
-                    id="fullname"
-                    type="text"
-                    placeholder="Enter your full name"
-                    value={formData.name}
-                    required
-                    name="name"
-                    onChange={handleChange}
-                    className="modern-input"
-                  />
-                  {renderFieldError('name')}
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.7 }}
-                  className="grid gap-2"
-                >
-                  <Label htmlFor="email" className="modern-subtitle text-gray-700 flex items-center gap-2">
-                    <Mail className="w-4 h-4" />
-                    Email
-                  </Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="Enter your email address"
-                    required
-                    value={formData.email}
-                    name="email"
-                    onChange={handleChange}
-                    className="modern-input"
-                  />
-                  {renderFieldError('email')}
-                </motion.div> */}
 
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
@@ -139,7 +125,7 @@ const ResetPassword = () => {
                 >
                   <Label htmlFor="password" className="modern-subtitle text-gray-700 flex items-center gap-2">
                     <Lock className="w-4 h-4" />
-                   new Password
+                   New Password
                   </Label>
                   <div className="relative">
                     <Input
@@ -201,7 +187,7 @@ const ResetPassword = () => {
                   {renderFieldError('confirmPassword')}
                 </motion.div>
               </div>
-            </form>
+            
           </CardContent>
           <CardFooter className="flex-col gap-3">
             <motion.div
@@ -214,29 +200,15 @@ const ResetPassword = () => {
                 <Button 
                   type="submit" 
                   className="w-full modern-button text-white modern-subtitle" 
-                  onClick={handleSubmit}
                 >
                   Set New Password
                 </Button>
               </motion.div>
             </motion.div>
-            {/* <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.1 }}
-              className="text-center mt-4"
-            >
-              <p className="text-gray-600 modern-subtitle">
-                Already have an account?{' '}
-                <motion.span whileHover={{ scale: 1.05 }}>
-                  <Link to="/login" className="text-indigo-600 hover:text-indigo-700 font-medium modern-subtitle">
-                    Sign in
-                  </Link>
-                </motion.span>
-              </p>
-            </motion.div> */}
+         
           </CardFooter>
         </Card>
+        </form>
       </motion.div>
     </div>
     </div>

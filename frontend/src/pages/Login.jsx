@@ -125,7 +125,7 @@ export default function Login() {
                   <div className="flex items-center">
                     <Label htmlFor="password" className="modern-subtitle text-gray-700">Password</Label>
                     <Link to='/forgot-password'
-                      whileHover={{ scale: 1.05 }}
+                      whilehover={{ scale: 1.05 }}
                     
                       className="ml-auto inline-block text-sm text-indigo-600 hover:text-indigo-700 modern-subtitle underline-offset-4 hover:underline"
                     >
@@ -145,7 +145,7 @@ export default function Login() {
                     />
                     <motion.button
                       type="button"
-                      whileHover={{ scale: 1.1 }}
+                      whilehover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
@@ -165,7 +165,7 @@ export default function Login() {
               transition={{ delay: 0.7 }}
               className="w-full"
             >
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <motion.div whilehover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Button 
                   type="submit" 
                   className="w-full modern-button text-white modern-subtitle" 
@@ -181,7 +181,7 @@ export default function Login() {
               transition={{ delay: 0.8 }}
               className="w-full"
             >
-              {/* <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              {/* <motion.div whilehover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Link variant="outline" className="w-full modern-card border border-gray-200 text-gray-700 hover:text-indigo-600 modern-subtitle" to='/forgot-password'>
                   Forgot Password
                 </Link>
@@ -195,7 +195,7 @@ export default function Login() {
             >
               <p className="text-gray-600 modern-subtitle">
                 Don't have an account?{' '}
-                <motion.span whileHover={{ scale: 1.05 }}>
+                <motion.span whilehover={{ scale: 1.05 }}>
                   <Link to="/signup" className="text-indigo-600 hover:text-indigo-700 font-medium modern-subtitle">
                     Sign up
                   </Link>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { motion } from "framer-motion";
 import {
   Card,
@@ -16,8 +16,21 @@ import { Alert, AlertDescription } from "@/components/ui/alert.jsx";
 
 
 import { AlertCircle, Sparkles, Eye, EyeOff, User, Mail, Lock } from "lucide-react";
+import { useState } from 'react';
+import { authContext } from '../context/AuthContext';
 
 const ForgotPassword = () => {
+  const [email,setEmail] = useState("")
+  const {forgotPassword} = useContext(authContext)
+  const handleChange = (e) =>{
+    setEmail(e.target.value)
+  }
+  const handleSubmit = async (e) =>{
+      e.preventDefault();  
+   const result = await forgotPassword({email})
+   console.log(result);
+   
+  }
   return (
       <div className="min-h-screen flex w-full justify-center items-center bg-gradient-to-br from-slate-50 via-white to-blue-50 modern-pattern py-8">
       <motion.div
@@ -27,6 +40,7 @@ const ForgotPassword = () => {
         className="w-full max-w-md"
       >
         <Card className="modern-card border border-gray-200 shadow-xl">
+         <form onSubmit={handleSubmit} >
           <CardHeader className="text-center">
             <motion.div
               initial={{ opacity: 0, y: -20 }}
@@ -44,14 +58,14 @@ const ForgotPassword = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
             >
-              <CardTitle className="text-2xl modern-title text-gray-900">forgot password</CardTitle>
+              <CardTitle className="text-2xl modern-title text-gray-900">Forgot password</CardTitle>
               <CardDescription className="text-gray-600 modern-subtitle mt-2">
-               Email Verification
+               Enter Email
               </CardDescription>
             </motion.div>
           </CardHeader>
           <CardContent>
-            <form>
+           
               <div className="flex flex-col gap-4">
                 
                 <motion.div
@@ -69,9 +83,9 @@ const ForgotPassword = () => {
                     type="email"
                     placeholder="Enter your email address"
                     required
-                  //  value={formData.email}
+                   value={email}
                     name="email"
-                   // onChange={handleChange}
+                   onChange={handleChange}
                     className="modern-input"
                   />
                  
@@ -147,7 +161,7 @@ const ForgotPassword = () => {
                   {renderFieldError('confirmPassword')}
                 </motion.div> */}
               </div>
-            </form>
+            
           </CardContent>
           <CardFooter className="flex-col gap-3">
             <motion.div
@@ -159,8 +173,8 @@ const ForgotPassword = () => {
               <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Button 
                   type="submit" 
-                  className="w-full modern-button text-white modern-subtitle" 
-                 // onClick={handleSubmit}
+                  className="w-full modern-button text-white modern-subtitle mt-5" 
+  
                 >
                  Send Link
                 </Button>
@@ -182,6 +196,7 @@ const ForgotPassword = () => {
               </p>
             </motion.div> */}
           </CardFooter>
+          </form>
         </Card>
       </motion.div>
     </div>

@@ -7,8 +7,9 @@ import ErrorContextProvider from "./context/ErrorContext.jsx";
 import  ContentContextProvider  from "./context/ContentContext.jsx";
 import CollectionContextProvider from "./context/CollectionContext.jsx";
 import { CommentProvider } from "./context/CommentContext.jsx";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import FollowContextProvider from "./context/FollowContext.jsx";
-import { ToastContainer } from "react-toastify";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

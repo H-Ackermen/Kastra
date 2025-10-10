@@ -7,11 +7,6 @@ export const authContext = createContext();
 
 axios.defaults.withCredentials = true; 
 
-// setting default axios 
-const savedToken = localStorage.getItem("token");
-if (savedToken) {
-  axios.defaults.headers.common["Authorization"] = `Bearer ${savedToken}`;
-}
 
 const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -76,7 +71,7 @@ const AuthContextProvider = ({ children }) => {
       setToken(null);
       setUser(null);
       toast.success("Logged out successfully!");
-      // localStorage.removeItem("token");
+      localStorage.removeItem("token");
     } catch (error) {
       console.log(error.message);
       handleApiError(error)
@@ -98,9 +93,43 @@ const AuthContextProvider = ({ children }) => {
     } 
   };
 
+  const forgotPassword = async (formData) => {
+    try {
+      console.log("frontend",formData);
+      
+      const res = await axios.post(`${API_URL}/api/auth/forgot-password`,formData)
+      console.log(res);
+      
+      if(res.data.success){
+        console.log(res.data.resetToken);
+        toast.success(res.data.message);
+      }
+      return res.data.success;
+    } catch (error) {
+      console.log(error.message)
+      handleApiError(error)
+      return false;
+    }
+  }
+
+  const resetPassword = async (formData,resetToken) => {
+    try {
+      console.log("Frontend")
+      const res = await axios.put(`${API_URL}/api/auth/reset-password`,formData,  { params: { token: resetToken } }  )
+      console.log("FRONTEND")
+      if(res.data.success){
+        toast.success(res.data.message);
+      }
+        return res.data.success;
+    } catch (error) {
+      console.log(error);
+      handleApiError(error)
+      return false;
+    }
+  }
+
   // On mount, if token exists, fetch user
   useEffect(() => {
-  //  const token = localStorage.getItem("token");
     if (token && !user) {
       getCurrentUser();
     }
@@ -121,7 +150,9 @@ const AuthContextProvider = ({ children }) => {
     register,
     login,
     logout,
-    getCurrentUser
+    getCurrentUser,
+    forgotPassword,
+    resetPassword
   };
 
   return (
