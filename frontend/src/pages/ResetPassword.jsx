@@ -19,7 +19,7 @@ import { AlertCircle, Sparkles, Eye, EyeOff, Lock } from "lucide-react";
 import { authContext } from '../context/AuthContext';
 import { errorContext } from '../context/ErrorContext';
 const ResetPassword = () => {
-  // const [isValid,setValid] = useState(true)
+ 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
    const resetToken = searchParams.get("token");
