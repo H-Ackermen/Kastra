@@ -241,6 +241,10 @@ export const resetPassword = async (req, res) => {
     return res.status(500).json({ success: false, message: "Invalid or expired token" });
   }
 };
+export const Welcome=(req,res)=>
+{
+  return res.send("welcome to backend");
+}
 
 export const validateResetToken = (req, res) => {
   console.log("Hello")

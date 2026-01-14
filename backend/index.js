@@ -47,7 +47,7 @@ app.use("/api/comments" , commentRoutes);
 app.use("/api/analytics", insightRoutes);
 app.use("/api/users",userRoutes)
 app.use("/api",CategoryRouter);
-
+app.use("/",authRoutes);
 // Start Server
 const startServer = async () => {
   try {
@@ -56,6 +56,7 @@ const startServer = async () => {
     app.listen(PORT, () => {
       console.log(`Server running on http://localhost:${PORT}`)
     });
+    
   } catch (err) {
     console.error("Failed to start server:", err.message)
   }
