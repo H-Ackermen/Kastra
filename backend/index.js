@@ -48,18 +48,24 @@ app.use("/api/analytics", insightRoutes);
 app.use("/api/users",userRoutes)
 app.use("/api",CategoryRouter);
 app.use("/",authRoutes);
-// Start Server
-const startServer = async () => {
-  try {
-    await connectDB()
-    connectCloudinary()
-    app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`)
-    });
-    
-  } catch (err) {
-    console.error("Failed to start server:", err.message)
-  }
-};
 
-startServer()
+// Export the app for Vercel
+export default app;
+
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  const startServer = async () => {
+    try {
+      await connectDB()
+      connectCloudinary()
+      app.listen(PORT, () => {
+        console.log(`Server running on http://localhost:${PORT}`)
+      });
+      
+    } catch (err) {
+      console.error("Failed to start server:", err.message)
+    }
+  };
+
+  startServer();
+}
