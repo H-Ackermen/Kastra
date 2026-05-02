@@ -182,7 +182,7 @@ export const forgotPassword = async (req, res) => {
         .status(404)
         .json({ success: false, message: "User not Found" });
     }
-    const token = await jwt.sign(
+    const token = jwt.sign(
       { _id: user._id, email: user.email, username: user.username },
       process.env.ACCESS_SECRET_KEY,
       { expiresIn: process.env.FORGOT_PASSWORD_EXPIRY }
